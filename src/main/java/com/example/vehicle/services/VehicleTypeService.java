@@ -1,8 +1,8 @@
 package com.example.vehicle.services;
 
 import com.example.vehicle.dtos.request.VehicleType.VehicleTypeCreationRequest;
-import com.example.vehicle.entities.vehicle.VehicleType;
+import com.example.vehicle.dtos.response.VehicleType.VehicleTypeResponse;
 
 public interface VehicleTypeService {
-    VehicleType create(VehicleTypeCreationRequest request);
+    VehicleTypeResponse create(VehicleTypeCreationRequest request);
 }

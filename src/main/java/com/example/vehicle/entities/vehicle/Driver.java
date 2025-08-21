@@ -6,6 +6,7 @@ import lombok.*;
 import java.math.BigDecimal;
 
 @Entity(name = "driver")
+@Table(name = "driver")
 @Getter
 @Setter
 @NoArgsConstructor

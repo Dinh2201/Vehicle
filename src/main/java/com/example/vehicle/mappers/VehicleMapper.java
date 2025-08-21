@@ -1,8 +1,8 @@
 package com.example.vehicle.mappers;
 
-import com.example.vehicle.dtos.response.DriverDTO;
-import com.example.vehicle.dtos.response.VehicleCreationResponse;
-import com.example.vehicle.dtos.response.VehicleTypeDTO;
+import com.example.vehicle.dtos.response.Vehicle.DriverDTO;
+import com.example.vehicle.dtos.response.Vehicle.VehicleResponse;
+import com.example.vehicle.dtos.response.Vehicle.VehicleTypeDTO;
 import com.example.vehicle.entities.vehicle.Driver;
 import com.example.vehicle.entities.vehicle.Vehicle;
 import com.example.vehicle.entities.vehicle.VehicleType;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface VehicleMapper {
     @Mapping(source = "vehicleId", target = "vehicleId")
-    VehicleCreationResponse toCreationResponse(Vehicle vehicle);
+    VehicleResponse toCreationResponse(Vehicle vehicle);
 
     default List<Long> mapDrivers(Set<Driver> drivers) {
         return drivers.stream().map(Driver::getDriverId).collect(Collectors.toList());

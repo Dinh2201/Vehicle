@@ -7,6 +7,7 @@ import lombok.*;
 import java.util.List;
 
 @Entity(name = "vehicleType")
+@Table(name = "vehicle_type")
 @Getter
 @Setter
 @NoArgsConstructor

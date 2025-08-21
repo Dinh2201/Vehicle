@@ -1,4 +1,4 @@
-package com.example.vehicle.dtos.response;
+package com.example.vehicle.dtos.response.Vehicle;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

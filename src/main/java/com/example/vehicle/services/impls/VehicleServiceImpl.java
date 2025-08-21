@@ -2,7 +2,7 @@ package com.example.vehicle.services.impls;
 
 import com.example.vehicle.dtos.request.Vehicle.VehicleCreationRequest;
 import com.example.vehicle.dtos.request.Vehicle.VehicleUpdateRequest;
-import com.example.vehicle.dtos.response.VehicleCreationResponse;
+import com.example.vehicle.dtos.response.Vehicle.VehicleResponse;
 import com.example.vehicle.entities.vehicle.Driver;
 import com.example.vehicle.entities.vehicle.Vehicle;
 import com.example.vehicle.entities.vehicle.VehicleType;
@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -59,7 +58,7 @@ public class VehicleServiceImpl implements VehicleService {
 //    }
 
 @Override
-public VehicleCreationResponse createVehicle(VehicleCreationRequest request) {
+public VehicleResponse createVehicle(VehicleCreationRequest request) {
     log.info("Start creating vehicle...");
 
     VehicleType vehicleType = vehicleTypeRepository.findById(request.getVehicleType())
@@ -86,10 +85,10 @@ public VehicleCreationResponse createVehicle(VehicleCreationRequest request) {
 
 
     @Override
-    public List<VehicleCreationResponse> getAllVehicles() {
+    public List<VehicleResponse> getAllVehicles() {
         log.info("Start get all vehicle ...");
         List<Vehicle> vehicles = vehicleRepository.findAll();
-        List<VehicleCreationResponse> responses = vehicles.stream()
+        List<VehicleResponse> responses = vehicles.stream()
                 .map(vehicleMapper::toCreationResponse)
                 .collect(Collectors.toList());
         return responses;
@@ -100,12 +99,12 @@ public VehicleCreationResponse createVehicle(VehicleCreationRequest request) {
     }
 
     @Override
-    public VehicleCreationResponse getVehicleById(Long id) {
+    public VehicleResponse getVehicleById(Long id) {
         return vehicleMapper.toCreationResponse(getVehicleEntityById(id));
     }
 
     @Override
-    public VehicleCreationResponse updateVehicle(Long id, VehicleUpdateRequest vehicleUpdateRequest) {
+    public VehicleResponse updateVehicle(Long id, VehicleUpdateRequest vehicleUpdateRequest) {
         log.info("Start update vehicle ...");
 
         Vehicle vehicle = getVehicleEntityById(id);

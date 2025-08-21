@@ -2,8 +2,7 @@ package com.example.vehicle.controllers;
 
 import com.example.vehicle.dtos.request.Vehicle.VehicleCreationRequest;
 import com.example.vehicle.dtos.request.Vehicle.VehicleUpdateRequest;
-import com.example.vehicle.dtos.response.VehicleCreationResponse;
-import com.example.vehicle.entities.vehicle.Vehicle;
+import com.example.vehicle.dtos.response.Vehicle.VehicleResponse;
 import com.example.vehicle.services.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,21 +18,21 @@ public class VehicleController {
     private VehicleService vehicleService;
 
     @PostMapping("/vehicles")
-    public ResponseEntity<VehicleCreationResponse> createVehicle(@RequestBody VehicleCreationRequest request) {
+    public ResponseEntity<VehicleResponse> createVehicle(@RequestBody VehicleCreationRequest request) {
         return ResponseEntity.ok(vehicleService.createVehicle(request));}
 
     @GetMapping("/vehicles")
-    public ResponseEntity<List<VehicleCreationResponse> > getAllVehicles() {
+    public ResponseEntity<List<VehicleResponse> > getAllVehicles() {
         return ResponseEntity.ok(vehicleService.getAllVehicles());
    }
 
     @GetMapping("/vehicle/{id}")
-    public ResponseEntity<VehicleCreationResponse> getVehicleById(@PathVariable Long id) {
+    public ResponseEntity<VehicleResponse> getVehicleById(@PathVariable Long id) {
         return ResponseEntity.ok(vehicleService.getVehicleById(id));
    }
 
    @PutMapping("/vehicle/update/{id}")
-    public ResponseEntity<VehicleCreationResponse> updateVehicle(@PathVariable Long id, @RequestBody VehicleUpdateRequest request) {
+    public ResponseEntity<VehicleResponse> updateVehicle(@PathVariable Long id, @RequestBody VehicleUpdateRequest request) {
         return ResponseEntity.ok(vehicleService.updateVehicle(id, request));
    }
 

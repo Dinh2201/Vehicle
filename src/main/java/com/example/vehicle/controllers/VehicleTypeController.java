@@ -1,9 +1,11 @@
 package com.example.vehicle.controllers;
 
 import com.example.vehicle.dtos.request.VehicleType.VehicleTypeCreationRequest;
+import com.example.vehicle.dtos.response.VehicleType.VehicleTypeResponse;
 import com.example.vehicle.entities.vehicle.VehicleType;
 import com.example.vehicle.services.VehicleTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,7 +15,7 @@ public class VehicleTypeController {
     private VehicleTypeService vehicleTypeService;
 
     @PostMapping("/vehicletypes")
-    public VehicleType createVehicleType(@RequestBody VehicleTypeCreationRequest request) {
-        return vehicleTypeService.create(request);
+    public ResponseEntity<VehicleTypeResponse>  createVehicleType(@RequestBody VehicleTypeCreationRequest request) {
+        return ResponseEntity.ok(vehicleTypeService.create(request));
     }
 }

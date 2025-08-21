@@ -1,4 +1,4 @@
-package com.example.vehicle.dtos.response;
+package com.example.vehicle.dtos.response.Vehicle;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class VehicleCreationResponse {
+public class VehicleResponse {
     Long vehicleId;
 
     String vehicleName;

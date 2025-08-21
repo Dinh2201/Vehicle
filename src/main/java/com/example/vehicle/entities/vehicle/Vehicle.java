@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "vehicle")
+@Table(name = "vehicle")
 @Getter
 @Setter
 @NoArgsConstructor

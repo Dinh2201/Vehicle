@@ -1,6 +1,7 @@
 package com.example.vehicle.services.impls;
 
 import com.example.vehicle.dtos.request.VehicleType.VehicleTypeCreationRequest;
+import com.example.vehicle.dtos.response.VehicleType.VehicleTypeResponse;
 import com.example.vehicle.entities.vehicle.VehicleType;
 import com.example.vehicle.mappers.VehicleTypeMapper;
 import com.example.vehicle.repositories.VehicleTypeRepository;
@@ -17,10 +18,13 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
     private final VehicleTypeMapper vehicleTypeMapper;
 
     @Override
-    public VehicleType create (VehicleTypeCreationRequest request){
+    public VehicleTypeResponse create (VehicleTypeCreationRequest request){
         log.info("VehicleType start create ...");
 
-        VehicleType vehicleType = vehicleTypeMapper.toVehicleType(request);
-        return vehicleTypeRepository.save(vehicleType);
+        VehicleType vehicleType = vehicleTypeMapper.toRequest(request);
+
+        VehicleType saved = vehicleTypeRepository.save(vehicleType);
+
+        return vehicleTypeMapper.toCreationResponse(saved);
     }
 }
