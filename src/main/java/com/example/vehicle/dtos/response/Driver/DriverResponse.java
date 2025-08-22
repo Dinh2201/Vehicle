@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DriverResponse {
+    Long driverId;
+
     String name;
 
     String age;
