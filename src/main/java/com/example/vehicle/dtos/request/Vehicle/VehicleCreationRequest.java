@@ -1,10 +1,10 @@
-package com.example.vehicle.dtos.request;
+package com.example.vehicle.dtos.request.Vehicle;
 
-import jakarta.persistence.Column;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -21,7 +21,7 @@ public class VehicleCreationRequest {
 
      LocalDate signupDate;
 
-     String vehicleType; // chứa ID
+     long vehicleType; // chứa ID
 
-     String driver;
+     List<Long> drivers;
 }

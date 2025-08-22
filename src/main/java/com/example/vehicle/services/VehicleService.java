@@ -1,8 +1,19 @@
 package com.example.vehicle.services;
 
-import com.example.vehicle.dtos.request.VehicleCreationRequest;
-import com.example.vehicle.entities.vehicle.VehicleEntity;
+import com.example.vehicle.dtos.request.Vehicle.VehicleCreationRequest;
+import com.example.vehicle.dtos.request.Vehicle.VehicleUpdateRequest;
+import com.example.vehicle.dtos.response.Vehicle.VehicleResponse;
+
+import java.util.List;
 
 public interface VehicleService {
-    VehicleEntity createVehicle(VehicleCreationRequest request);
+    VehicleResponse createVehicle(VehicleCreationRequest request);
+
+    List<VehicleResponse> getAllVehicles();
+
+    VehicleResponse getVehicleById(Long id);
+
+    VehicleResponse updateVehicle(Long id, VehicleUpdateRequest request);
+
+    boolean deleteVehicle(List<Long> ids);
 }
