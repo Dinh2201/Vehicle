@@ -79,7 +79,7 @@ public VehicleResponse createVehicle(VehicleCreationRequest request) {
             .build();
 
     Vehicle response = vehicleRepository.save(vehicle);
-    return vehicleMapper.toCreationResponse(response);
+    return vehicleMapper.toResponse(response);
 }
 
 
@@ -89,7 +89,7 @@ public VehicleResponse createVehicle(VehicleCreationRequest request) {
         log.info("Start get all vehicle ...");
         List<Vehicle> vehicles = vehicleRepository.findAll();
         List<VehicleResponse> responses = vehicles.stream()
-                .map(vehicleMapper::toCreationResponse)
+                .map(vehicleMapper::toResponse)
                 .collect(Collectors.toList());
         return responses;
     }
@@ -100,7 +100,7 @@ public VehicleResponse createVehicle(VehicleCreationRequest request) {
 
     @Override
     public VehicleResponse getVehicleById(Long id) {
-        return vehicleMapper.toCreationResponse(getVehicleEntityById(id));
+        return vehicleMapper.toResponse(getVehicleEntityById(id));
     }
 
     @Override
@@ -128,7 +128,7 @@ public VehicleResponse createVehicle(VehicleCreationRequest request) {
         //  Lưu lại vehicle đã cập nhật
         Vehicle response = vehicleRepository.save(vehicle);
 
-        return vehicleMapper.toCreationResponse(response);
+        return vehicleMapper.toResponse(response);
 
     }
 

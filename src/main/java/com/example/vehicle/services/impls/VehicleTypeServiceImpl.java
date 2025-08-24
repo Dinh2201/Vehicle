@@ -28,7 +28,7 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
 
         VehicleType saved = vehicleTypeRepository.save(vehicleType);
 
-        return vehicleTypeMapper.toCreationResponse(saved);
+        return vehicleTypeMapper.toResponse(saved);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
         List<VehicleType> vehicleTypes = vehicleTypeRepository.findAll();
         List<VehicleTypeResponse> responses = vehicleTypes.stream()
                 .map(
-                        vehicleTypeMapper::toCreationResponse
+                        vehicleTypeMapper::toResponse
                 )
                 .collect(Collectors.toList());
         return responses;
@@ -52,7 +52,7 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
     public VehicleTypeResponse getVehicleTypeById(Long id) {
         log.info("VehicleType start get VehicleType by id ...");
 
-        return vehicleTypeMapper.toCreationResponse(getVehicleTypeEntityById(id));
+        return vehicleTypeMapper.toResponse(getVehicleTypeEntityById(id));
     }
 
     @Override
@@ -61,7 +61,7 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
         VehicleType vehicleType = getVehicleTypeEntityById(id);
         vehicleTypeMapper.updateVehicleType(vehicleType, request);
         VehicleType newVehicleType = vehicleTypeRepository.save(vehicleType);
-        VehicleTypeResponse response = vehicleTypeMapper.toCreationResponse(newVehicleType);
+        VehicleTypeResponse response = vehicleTypeMapper.toResponse(newVehicleType);
         return response;
     }
 

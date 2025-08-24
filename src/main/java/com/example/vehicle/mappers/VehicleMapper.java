@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface VehicleMapper {
     @Mapping(source = "vehicleId", target = "vehicleId")
-    VehicleResponse toCreationResponse(Vehicle vehicle);
+    VehicleResponse toResponse(Vehicle vehicle);
 
     default List<Long> mapDrivers(Set<Driver> drivers) {
         return drivers.stream().map(Driver::getDriverId).collect(Collectors.toList());

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "driver")
 @Table(name = "driver")
@@ -38,4 +40,7 @@ public class Driver {
 
     @Column(name = "avg_rating", precision = 5, scale = 2)
     private BigDecimal avgRating;
+
+    @ManyToMany(mappedBy = "drivers")
+    private Set<Vehicle> vehicles = new HashSet<>();
 }
