@@ -31,6 +31,12 @@ public class Vehicle {
     @Column(name = "signup_date")
     private LocalDate signupDate;
 
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Column(name = "longitude")
+    private Double longitude;
+
     @ManyToOne
     @JoinColumn(name = "vehicle_type_id")
     private VehicleType vehicleType;

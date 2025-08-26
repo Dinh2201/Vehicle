@@ -22,6 +22,10 @@ public class VehicleResponse {
 
     LocalDate signupDate;
 
+    Double latitude;
+
+    Double longitude;
+
      VehicleTypeDTO vehicleType;
 
      List<DriverDTO> drivers;

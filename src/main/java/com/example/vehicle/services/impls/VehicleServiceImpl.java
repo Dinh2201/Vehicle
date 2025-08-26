@@ -2,10 +2,13 @@ package com.example.vehicle.services.impls;
 
 import com.example.vehicle.dtos.request.Vehicle.VehicleCreationRequest;
 import com.example.vehicle.dtos.request.Vehicle.VehicleUpdateRequest;
+import com.example.vehicle.dtos.response.Vehicle.LocationResponse;
 import com.example.vehicle.dtos.response.Vehicle.VehicleResponse;
 import com.example.vehicle.entities.vehicle.Driver;
 import com.example.vehicle.entities.vehicle.Vehicle;
 import com.example.vehicle.entities.vehicle.VehicleType;
+import com.example.vehicle.exceptions.AppException;
+import com.example.vehicle.exceptions.ErrorCode;
 import com.example.vehicle.mappers.VehicleMapper;
 import com.example.vehicle.repositories.DriverRepository;
 import com.example.vehicle.repositories.VehicleRepository;
@@ -57,30 +60,46 @@ public class VehicleServiceImpl implements VehicleService {
 //        return vehicleRepository.save(vehicle);
 //    }
 
-@Override
-public VehicleResponse createVehicle(VehicleCreationRequest request) {
-    log.info("Start creating vehicle...");
+    // Hàm random số thực trong khoảng [min, max]
+    private double getRandomInRange(double min, double max) {
+        return min + (Math.random() * (max - min));
+    }
 
-    VehicleType vehicleType = vehicleTypeRepository.findById(request.getVehicleType())
-            .orElseThrow(() -> new RuntimeException("VehicleType not found"));
+    @Override
+    public VehicleResponse createVehicle(VehicleCreationRequest request) {
+        log.info("Start creating vehicle...");
 
-    Set<Driver> drivers = request.getDrivers().stream()
-            .map(id -> driverRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Driver not found: " + id)))
-            .collect(Collectors.toSet());
+        if(vehicleRepository.existsByLicensePlate(request.getLicensePlate())) {
+            throw new AppException(ErrorCode.VEHICLE_LICENSE_PLATE_EXCEPTION);
+        }
 
-    Vehicle vehicle = Vehicle.builder()
-            .vehicleName(request.getVehicleName())
-            .licensePlate(request.getLicensePlate())
-            .status(request.getStatus())
-            .signupDate(request.getSignupDate())
-            .vehicleType(vehicleType)
-            .drivers(drivers)
-            .build();
+        VehicleType vehicleType = vehicleTypeRepository.findById(request.getVehicleType())
+                .orElseThrow(() -> new AppException(ErrorCode.VEHICLE_TYPE_EXCEPTION));
 
-    Vehicle response = vehicleRepository.save(vehicle);
-    return vehicleMapper.toResponse(response);
-}
+        Set<Driver> drivers = request.getDrivers().stream()
+                .map(id -> driverRepository.findById(id)
+                        .orElseThrow(() -> new AppException(ErrorCode.DRIVER_EXCEPTION)))
+                .collect(Collectors.toSet());
+
+        // ==== Random vị trí (lat/lon) trong khoảng giới hạn ====
+        double latitude = getRandomInRange(10.75, 10.85);     // Vĩ độ HCM
+        double longitude = getRandomInRange(106.60, 106.75);  // Kinh độ HCM
+        // ======================================================
+
+        Vehicle vehicle = Vehicle.builder()
+                .vehicleName(request.getVehicleName())
+                .licensePlate(request.getLicensePlate())
+                .status(request.getStatus())
+                .signupDate(request.getSignupDate())
+                .latitude(latitude)
+                .longitude(longitude)
+                .vehicleType(vehicleType)
+                .drivers(drivers)
+                .build();
+
+        Vehicle response = vehicleRepository.save(vehicle);
+        return vehicleMapper.toResponse(response);
+    }
 
 
 
@@ -95,7 +114,7 @@ public VehicleResponse createVehicle(VehicleCreationRequest request) {
     }
 
     public Vehicle getVehicleEntityById(Long id) {
-        return vehicleRepository.findById(id).orElseThrow(() -> new RuntimeException("Vehicle not found with ID: " + id));
+        return vehicleRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.VEHICLE_EXCEPTION ));
     }
 
     @Override
@@ -115,13 +134,13 @@ public VehicleResponse createVehicle(VehicleCreationRequest request) {
         vehicle.setSignupDate(vehicleUpdateRequest.getSignupDate());
 
         // Cập nhật vehicleType
-        VehicleType vehicleType = vehicleTypeRepository.findById(vehicleUpdateRequest.getVehicleType()).orElseThrow(() -> new RuntimeException("VehicleType not found with ID: " + id));
+        VehicleType vehicleType = vehicleTypeRepository.findById(vehicleUpdateRequest.getVehicleType()).orElseThrow(() -> new AppException(ErrorCode.VEHICLE_TYPE_EXCEPTION));
         vehicle.setVehicleType(vehicleType);
 
         // Cập nhật drivers nếu có
         Set<Driver> drivers = vehicleUpdateRequest.getDrivers().stream()
                 .map(driverId -> driverRepository.findById(driverId)
-                        .orElseThrow(() -> new RuntimeException("Driver not found with ID: " + driverId)))
+                        .orElseThrow(() -> new AppException(ErrorCode.DRIVER_EXCEPTION)))
                 .collect(Collectors.toSet());
         vehicle.setDrivers(drivers);
 
@@ -130,6 +149,23 @@ public VehicleResponse createVehicle(VehicleCreationRequest request) {
 
         return vehicleMapper.toResponse(response);
 
+    }
+
+    @Override
+    public VehicleResponse updateVehicleLocation(Long id) {
+        log.info("Start update vehicle location ...");
+        Vehicle vehicle = vehicleRepository.findById(id).orElseThrow(() -> new RuntimeException("Vehicle not found with ID: " + id));
+
+        // ==== Random vị trí (lat/lon) trong khoảng giới hạn ====
+        double latitude = getRandomInRange(10.75, 10.85);     // Vĩ độ HCM
+        double longitude = getRandomInRange(106.60, 106.75);  // Kinh độ HCM
+        // ======================================================
+        vehicle.setLatitude(latitude);
+        vehicle.setLongitude(longitude);
+
+         vehicleRepository.save(vehicle);
+        Vehicle updatedVehicle = vehicleRepository.save(vehicle);
+        return vehicleMapper.toResponse(updatedVehicle);
     }
 
     @Override
