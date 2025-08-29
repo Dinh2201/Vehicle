@@ -15,4 +15,6 @@ public interface VehicleTypeService {
     VehicleTypeResponse updateVehicleType(Long id, VehicleTypeCreationRequest request);
 
     boolean deleteVehicleType(List<Long> ids);
+
+
 }
