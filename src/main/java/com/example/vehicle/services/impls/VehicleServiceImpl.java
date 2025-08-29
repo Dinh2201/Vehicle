@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -76,10 +77,11 @@ public class VehicleServiceImpl implements VehicleService {
         VehicleType vehicleType = vehicleTypeRepository.findById(request.getVehicleType())
                 .orElseThrow(() -> new AppException(ErrorCode.VEHICLE_TYPE_EXCEPTION));
 
-        Set<Driver> drivers = request.getDrivers().stream()
-                .map(id -> driverRepository.findById(id)
-                        .orElseThrow(() -> new AppException(ErrorCode.DRIVER_EXCEPTION)))
-                .collect(Collectors.toSet());
+        Driver driver = driverRepository.findById(request.getDriver())
+                .orElseThrow(() -> new AppException(ErrorCode.DRIVER_EXCEPTION));
+
+        Set<Driver> drivers = new HashSet<>();
+        drivers.add(driver);
 
         // ==== Random vị trí (lat/lon) trong khoảng giới hạn ====
         double latitude = getRandomInRange(10.75, 10.85);     // Vĩ độ HCM
@@ -100,7 +102,6 @@ public class VehicleServiceImpl implements VehicleService {
         Vehicle response = vehicleRepository.save(vehicle);
         return vehicleMapper.toResponse(response);
     }
-
 
 
     @Override
@@ -138,10 +139,11 @@ public class VehicleServiceImpl implements VehicleService {
         vehicle.setVehicleType(vehicleType);
 
         // Cập nhật drivers nếu có
-        Set<Driver> drivers = vehicleUpdateRequest.getDrivers().stream()
-                .map(driverId -> driverRepository.findById(driverId)
-                        .orElseThrow(() -> new AppException(ErrorCode.DRIVER_EXCEPTION)))
-                .collect(Collectors.toSet());
+        Driver driver = driverRepository.findById(vehicleUpdateRequest.getDriver())
+                .orElseThrow(() -> new AppException(ErrorCode.DRIVER_EXCEPTION));
+
+        Set<Driver> drivers = new HashSet<>();
+        drivers.add(driver);
         vehicle.setDrivers(drivers);
 
         //  Lưu lại vehicle đã cập nhật

@@ -8,6 +8,9 @@ import com.example.vehicle.dtos.response.Vehicle.LocationResponse;
 import com.example.vehicle.dtos.response.Vehicle.VehicleResponse;
 import com.example.vehicle.services.VehicleService;
 import jakarta.validation.Valid;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,11 +18,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/service/v1")
+@RequestMapping("/api/v1")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class VehicleController {
 
-    @Autowired
-    private VehicleService vehicleService;
+     VehicleService vehicleService;
 
     @PostMapping("/vehicles")
     public ResponseEntity<ApiResponse<VehicleResponse>> createVehicle(@RequestBody @Valid VehicleCreationRequest request) {
@@ -52,7 +56,7 @@ public class VehicleController {
         return ResponseEntity.ok(vehicleService.updateVehicleLocation(id));
    }
 
-   @PutMapping("/vehicle/delete")
+   @DeleteMapping("/vehicle/delete")
     public boolean deleteVehicle(@RequestBody List<Long> ids) {
         return vehicleService.deleteVehicle(ids);
    }

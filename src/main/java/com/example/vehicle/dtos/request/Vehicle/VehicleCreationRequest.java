@@ -34,6 +34,6 @@ public class VehicleCreationRequest {
     @NotNull(message = "ID loại xe là bắt buộc")
      long vehicleType; // chứa ID
 
-    @NotEmpty(message = "Danh sách tài xế không được rỗng")
-     List<Long> drivers;
+    @NotNull(message = "ID tài xế không được rỗng")
+     Long driver;
 }

@@ -26,11 +26,11 @@ public class VehicleResponse {
 
     Double longitude;
 
-     VehicleTypeDTO vehicleType;
+    long vehicleType; // chứa ID
 
-     List<DriverDTO> drivers;
-//    long vehicleType; // chứa ID
-//
+     DriverDTO driver;
+
+////     VehicleTypeDTO vehicleType;
 //    List<Long> drivers;
 }
 

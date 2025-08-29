@@ -3,17 +3,20 @@ package com.example.vehicle.controllers;
 import com.example.vehicle.dtos.request.Driver.DriverCreationRequest;
 import com.example.vehicle.dtos.response.Driver.DriverResponse;
 import com.example.vehicle.services.DriverService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/service/v1")
+@RequestMapping("/api/v1")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class DriverController {
-    @Autowired
-    private DriverService driverService;
+    DriverService driverService;
 
     @PostMapping("/drivers")
     public ResponseEntity<DriverResponse> createDriver (@RequestBody DriverCreationRequest request){
@@ -35,9 +38,11 @@ public class DriverController {
         return ResponseEntity.ok(driverService.updateDriver(id, request));
     }
 
-    @PutMapping("/driver/delete")
+    @DeleteMapping("/driver/delete")
     public ResponseEntity<Boolean> deleteDriver(@RequestBody List<Long> ids){
         return ResponseEntity.ok(driverService.deleteDriver(ids));
 
     }
+
+
 }

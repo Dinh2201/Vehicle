@@ -1,6 +1,7 @@
 package com.example.vehicle.dtos.response.VehicleType;
 
 import com.example.vehicle.dtos.response.Vehicle.VehicleResponse;
+import com.example.vehicle.dtos.response.Vehicle.VehicleResponseNoVehicleType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -18,5 +19,5 @@ public class VehicleTypeResponse {
 
     String description;
 
-    List<VehicleResponse> vehicles;
+    List<VehicleResponseNoVehicleType> vehicles;
 }
