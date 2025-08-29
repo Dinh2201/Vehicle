@@ -1,6 +1,5 @@
 package com.example.vehicle.services.impls;
 
-import com.example.vehicle.dtos.request.BookingRequest;
 import com.example.vehicle.dtos.request.Driver.DriverCreationRequest;
 import com.example.vehicle.dtos.response.Driver.DriverResponse;
 import com.example.vehicle.entities.vehicle.Driver;
@@ -88,9 +87,5 @@ public class DriverServiceImpl implements DriverService {
     }
 
 
-    @Override
-    public boolean acceptBooking(Long id, BookingRequest request) {
-        // Trả về kết quả trực tiếp
-        return request.getIsAccept();
-    }
+
 }
