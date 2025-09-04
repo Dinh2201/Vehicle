@@ -34,7 +34,7 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
     @Override
     public List<VehicleTypeResponse> getAllVehicleTypes() {
         log.info("VehicleType start get All VehicleTypes ...");
-        List<VehicleType> vehicleTypes = vehicleTypeRepository.findAll();
+        List<VehicleType> vehicleTypes = vehicleTypeRepository.findAllByOrderByVehicleTypeIdAsc();
         List<VehicleTypeResponse> responses = vehicleTypes.stream()
                 .map(
                         vehicleTypeMapper::toResponse
@@ -44,21 +44,19 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
 
     }
 
-    public VehicleType getVehicleTypeEntityById(Long id) {
-        return vehicleTypeRepository.findById(id).orElseThrow(() -> new RuntimeException("VehicleType not found with id " + id));
-    }
-
     @Override
     public VehicleTypeResponse getVehicleTypeById(Long id) {
         log.info("VehicleType start get VehicleType by id ...");
 
-        return vehicleTypeMapper.toResponse(getVehicleTypeEntityById(id));
+        return vehicleTypeMapper.toResponse(vehicleTypeRepository.findById(id).orElseThrow(() -> new RuntimeException("VehicleType not found with id " + id)));
     }
 
     @Override
     public VehicleTypeResponse updateVehicleType(Long id, VehicleTypeCreationRequest request) {
+
         log.info("VehicleType start update VehicleType by id ...");
-        VehicleType vehicleType = getVehicleTypeEntityById(id);
+        VehicleType vehicleType = vehicleTypeRepository.findById(id).orElseThrow(() -> new RuntimeException("VehicleType not found with id " + id));
+
         vehicleTypeMapper.updateVehicleType(vehicleType, request);
         VehicleType newVehicleType = vehicleTypeRepository.save(vehicleType);
         VehicleTypeResponse response = vehicleTypeMapper.toResponse(newVehicleType);

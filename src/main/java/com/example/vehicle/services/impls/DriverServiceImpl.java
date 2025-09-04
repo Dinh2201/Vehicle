@@ -1,12 +1,12 @@
 package com.example.vehicle.services.impls;
 
-import com.example.vehicle.dtos.request.DispatchRequest;
 import com.example.vehicle.dtos.request.Driver.DriverCreationRequest;
 import com.example.vehicle.dtos.response.Driver.DriverResponse;
 import com.example.vehicle.entities.vehicle.Driver;
 import com.example.vehicle.entities.vehicle.Vehicle;
 import com.example.vehicle.mappers.DriverMapper;
 import com.example.vehicle.repositories.DriverRepository;
+import com.example.vehicle.repositories.VehicleRepository;
 import com.example.vehicle.services.DriverService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +23,8 @@ public class DriverServiceImpl implements DriverService {
 
     private final DriverRepository driverRepository;
     private final DriverMapper driverMapper;
+    private final VehicleRepository vehicleRepository;
+
 
     @Override
     public DriverResponse createDriver (DriverCreationRequest request){
@@ -36,27 +38,35 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public List<DriverResponse> getAllDrivers() {
         log.info("VehicleType start get All Drivers ...");
-        List<Driver> drivers = driverRepository.findAll();
+        List<Driver> drivers = driverRepository.findAllByOrderByDriverIdAsc();
         List<DriverResponse> responses = drivers.stream()
                 .map(driverMapper::toResponse)
                 .collect(Collectors.toList());
         return responses;
     }
 
-    public Driver getDriverEntityById(long id) {
-        return driverRepository.findById(id).orElseThrow(() -> new RuntimeException("Driver not found by id: " + id));
-    }
+
     @Override
     public DriverResponse getDriverById(Long id) {
         log.info("VehicleType start get Driver by id ...");
-        return driverMapper.toResponse(getDriverEntityById(id));
+        return driverMapper.toResponse(driverRepository.findById(id).orElseThrow(() -> new RuntimeException("Driver not found by id: " + id)));
     }
 
     @Override
     public DriverResponse updateDriver(Long id, DriverCreationRequest request) {
         log.info("VehicleType start update driver ...");
-        Driver driver = getDriverEntityById(id);
+        Driver driver = driverRepository.findById(id).orElseThrow(() -> new RuntimeException("Driver not found by id: " + id));
         driverMapper.updateDriver(driver, request);
+
+        if (request.getStatus() != null) {
+
+            Set<Vehicle> vehicles = driver.getVehicles();
+
+            for (Vehicle vehicle : vehicles) {
+                vehicle.setStatus(request.getStatus()); // Đồng bộ status
+                vehicleRepository.save(vehicle); // Lưu vehicle
+            }
+        }
         Driver newDriver = driverRepository.save(driver);
         return driverMapper.toResponse(newDriver);
     }
@@ -88,8 +98,18 @@ public class DriverServiceImpl implements DriverService {
     }
 
 
+//    @Override
+//    public boolean acceptBooking(Long id, DispatchRequest request) {
+//        return request.getIsAccept();
+//    }
     @Override
-    public boolean acceptBooking(Long id, DispatchRequest request) {
-        return request.getIsAccept();
+    public boolean acceptBooking(Long id, String action) {
+        if ("accept".equalsIgnoreCase(action)) {
+            return true;
+        } else if ("reject".equalsIgnoreCase(action)) {
+            return false;
     }
+        // Nếu không phải accept/reject thì mặc định reject
+        return false;
+}
 }

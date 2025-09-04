@@ -1,6 +1,5 @@
 package com.example.vehicle.services;
 
-import com.example.vehicle.dtos.request.DispatchRequest;
 import com.example.vehicle.dtos.request.Driver.DriverCreationRequest;
 import com.example.vehicle.dtos.response.Driver.DriverResponse;
 
@@ -17,5 +16,5 @@ public interface DriverService {
 
     boolean deleteDriver(List<Long> ids);
 
-    boolean  acceptBooking(Long id, DispatchRequest request);
+    boolean  acceptBooking(Long id, String action);
 }

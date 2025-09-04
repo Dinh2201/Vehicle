@@ -3,12 +3,11 @@ package com.example.vehicle.entities.vehicle;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "vehicle")
-@Table(name = "vehicle")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,7 +15,12 @@ import java.util.Set;
 @Builder
 public class Vehicle {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "vehicle_seq_gen")
+    @SequenceGenerator(
+            name = "vehicle_seq_gen",
+            sequenceName = "vehicle_vehicle_id_seq",  // trùng với tên sequence trong PostgreSQL
+            allocationSize = 1
+    )
     @Column(name = "vehicle_id")
     private long vehicleId;
 
@@ -29,7 +33,7 @@ public class Vehicle {
     private String status;
 
     @Column(name = "signup_date")
-    private LocalDate signupDate;
+    private LocalDateTime signupDate;
 
     @Column(name = "latitude")
     private Double latitude;

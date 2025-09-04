@@ -1,17 +1,14 @@
 package com.example.vehicle.controllers;
 
-import com.example.vehicle.dtos.request.Vehicle.LocationRequest;
 import com.example.vehicle.dtos.request.Vehicle.VehicleCreationRequest;
 import com.example.vehicle.dtos.request.Vehicle.VehicleUpdateRequest;
 import com.example.vehicle.dtos.response.ApiResponse;
-import com.example.vehicle.dtos.response.Vehicle.LocationResponse;
 import com.example.vehicle.dtos.response.Vehicle.VehicleResponse;
 import com.example.vehicle.services.VehicleService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

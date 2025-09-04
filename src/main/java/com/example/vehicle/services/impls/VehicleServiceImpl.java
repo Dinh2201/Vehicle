@@ -2,7 +2,6 @@ package com.example.vehicle.services.impls;
 
 import com.example.vehicle.dtos.request.Vehicle.VehicleCreationRequest;
 import com.example.vehicle.dtos.request.Vehicle.VehicleUpdateRequest;
-import com.example.vehicle.dtos.response.Vehicle.LocationResponse;
 import com.example.vehicle.dtos.response.Vehicle.VehicleResponse;
 import com.example.vehicle.entities.vehicle.Driver;
 import com.example.vehicle.entities.vehicle.Vehicle;
@@ -18,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -92,7 +92,7 @@ public class VehicleServiceImpl implements VehicleService {
                 .vehicleName(request.getVehicleName())
                 .licensePlate(request.getLicensePlate())
                 .status(request.getStatus())
-                .signupDate(request.getSignupDate())
+                .signupDate(request.getSignupDate().atTime(LocalTime.now()))
                 .latitude(latitude)
                 .longitude(longitude)
                 .vehicleType(vehicleType)
@@ -107,38 +107,36 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public List<VehicleResponse> getAllVehicles() {
         log.info("Start get all vehicle ...");
-        List<Vehicle> vehicles = vehicleRepository.findAll();
+        List<Vehicle> vehicles = vehicleRepository.findAllByOrderByVehicleIdAsc();
         List<VehicleResponse> responses = vehicles.stream()
                 .map(vehicleMapper::toResponse)
                 .collect(Collectors.toList());
         return responses;
     }
 
-    public Vehicle getVehicleEntityById(Long id) {
-        return vehicleRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.VEHICLE_EXCEPTION ));
-    }
-
     @Override
     public VehicleResponse getVehicleById(Long id) {
-        return vehicleMapper.toResponse(getVehicleEntityById(id));
+        return vehicleMapper.toResponse(vehicleRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.VEHICLE_EXCEPTION )));
     }
 
     @Override
     public VehicleResponse updateVehicle(Long id, VehicleUpdateRequest vehicleUpdateRequest) {
         log.info("Start update vehicle ...");
 
-        Vehicle vehicle = getVehicleEntityById(id);
+        Vehicle vehicle = vehicleRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.VEHICLE_EXCEPTION ));
 
         vehicle.setVehicleName(vehicleUpdateRequest.getVehicleName());
         vehicle.setLicensePlate(vehicleUpdateRequest.getLicensePlate());
         vehicle.setStatus(vehicleUpdateRequest.getStatus());
-        vehicle.setSignupDate(vehicleUpdateRequest.getSignupDate());
+        if (vehicleUpdateRequest.getSignupDate() != null) {
+            vehicle.setSignupDate(vehicleUpdateRequest.getSignupDate().atTime(LocalTime.now()));
+        }
 
-        // Cập nhật vehicleType
+        log.info("Cập nhật Vehicle Type");
         VehicleType vehicleType = vehicleTypeRepository.findById(vehicleUpdateRequest.getVehicleType()).orElseThrow(() -> new AppException(ErrorCode.VEHICLE_TYPE_EXCEPTION));
         vehicle.setVehicleType(vehicleType);
 
-        // Cập nhật drivers nếu có
+        log.info("Cập nhật drivers nếu có");
         Driver driver = driverRepository.findById(vehicleUpdateRequest.getDriver())
                 .orElseThrow(() -> new AppException(ErrorCode.DRIVER_EXCEPTION));
 
@@ -146,7 +144,7 @@ public class VehicleServiceImpl implements VehicleService {
         drivers.add(driver);
         vehicle.setDrivers(drivers);
 
-        //  Lưu lại vehicle đã cập nhật
+        log.info("Lưu lại vehicle đã cập nhật");
         Vehicle response = vehicleRepository.save(vehicle);
 
         return vehicleMapper.toResponse(response);
@@ -175,10 +173,11 @@ public class VehicleServiceImpl implements VehicleService {
         if (ids == null || ids.isEmpty()) {
             return false;
         }
-        // Lấy danh sách thực tế các vehicle tồn tại
+
+        log.info("Lấy danh sách thực tế các vehicle tồn tại");
         List<Vehicle> vehicles = vehicleRepository.findAllById(ids);
 
-        // So sánh số lượng
+        log.info("So sánh số lượng");
         if (vehicles.size() != ids.size()) {
             throw new RuntimeException("Some vehicle IDs do not exist.");
         }

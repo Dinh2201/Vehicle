@@ -14,17 +14,17 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse> handleException(Exception exception) {
-        ApiResponse apiResponse = new ApiResponse();
+    public ResponseEntity<ApiResponse<String>> handleException(Exception exception) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
         apiResponse.setCode(ErrorCode.UNCATEGORIED_EXCEPTION.getCode());
-        apiResponse.setMessage(ErrorCode.UNCATEGORIED_EXCEPTION.getMessage());
+        apiResponse.setMessage(exception.getMessage());
         return ResponseEntity.badRequest().body(apiResponse);
     }
 
     @ExceptionHandler(AppException.class)
-    public ResponseEntity<ApiResponse> handleAppException(AppException exception) {
+    public ResponseEntity<ApiResponse<String>> handleAppException(AppException exception) {
         ErrorCode errorCode = exception.getErrorCode();
-        ApiResponse apiResponse = new ApiResponse();
+        ApiResponse<String> apiResponse = new ApiResponse<>();
         apiResponse.setCode(errorCode.getCode());
         apiResponse.setMessage(errorCode.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
@@ -42,7 +42,6 @@ public class GlobalExceptionHandler {
         apiResponse.setCode(ErrorCode.VALIDATION.getCode());
         apiResponse.setMessage(ErrorCode.VALIDATION.getMessage());
         apiResponse.setResult(errors);
-
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
     }
 

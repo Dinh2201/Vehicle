@@ -1,32 +1,35 @@
 package com.example.vehicle.dtos.response.Vehicle;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class DriverDTO {
-    private long driverId;
+     long driverId;
 
-    private String name;
+     String name;
 
-    private String age;
+     String age;
 
-    private String phoneNumber;
+     String phoneNumber;
 
-    private String address;
+     String address;
 
-    private String identityCard;
+     String identityCard;
 
-    private String sex;
+     String sex;
 
-    private String driverLicense;
+     String driverLicense;
 
-    private String status;
+     String status;
 
-    private BigDecimal avgRating;
+     BigDecimal avgRating;
 }

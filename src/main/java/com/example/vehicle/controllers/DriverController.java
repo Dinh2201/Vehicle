@@ -1,6 +1,5 @@
 package com.example.vehicle.controllers;
 
-import com.example.vehicle.dtos.request.DispatchRequest;
 import com.example.vehicle.dtos.request.Driver.DriverCreationRequest;
 import com.example.vehicle.dtos.response.Driver.DriverResponse;
 import com.example.vehicle.services.DriverService;
@@ -45,10 +44,14 @@ public class DriverController {
 
     }
 
+//    // Endpoint để chấp nhận tài xế
+//    @PutMapping("/driver/{driverId}/accept")
+//    public ResponseEntity<Boolean> isAcceptBooking(@PathVariable Long driverId, @RequestBody DispatchRequest dispatchRequest) {
+//        return ResponseEntity.ok(driverService.acceptBooking(driverId, dispatchRequest));
+//    }
     // Endpoint để chấp nhận tài xế
     @PutMapping("/driver/{driverId}/accept")
-    public ResponseEntity<Boolean> isAcceptBooking(@PathVariable Long driverId, @RequestBody DispatchRequest dispatchRequest) {
-        return ResponseEntity.ok(driverService.acceptBooking(driverId, dispatchRequest));
+    public ResponseEntity<Boolean> isAcceptBooking(@PathVariable Long driverId, @RequestParam("action") String action) {
+        return ResponseEntity.ok(driverService.acceptBooking(driverId, action));
     }
-
 }
