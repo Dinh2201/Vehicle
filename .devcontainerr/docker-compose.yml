@@ -14,4 +14,4 @@ services:
     volumes:
       - ./postgres:/docker-entrypoint-initdb.d/
     ports:
-      - "15800:5432"
+      - "15801:5432"
