@@ -23,4 +23,10 @@ public class VehicleLocationResponse {
      double longitude;
 
      LocalDateTime updatedAt;
+
+     long vehicleType;
+
+     DriverDTO driver;
+
+
 }

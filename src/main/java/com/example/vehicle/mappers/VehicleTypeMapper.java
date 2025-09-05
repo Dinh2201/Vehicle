@@ -1,10 +1,7 @@
 package com.example.vehicle.mappers;
 
 import com.example.vehicle.dtos.request.VehicleType.VehicleTypeCreationRequest;
-import com.example.vehicle.dtos.response.Vehicle.VehicleResponse;
-import com.example.vehicle.dtos.response.Vehicle.VehicleResponseNoVehicleType;
 import com.example.vehicle.dtos.response.VehicleType.VehicleTypeResponse;
-import com.example.vehicle.entities.vehicle.Vehicle;
 import com.example.vehicle.entities.vehicle.VehicleType;
 import org.mapstruct.*;
 

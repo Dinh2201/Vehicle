@@ -1,5 +1,6 @@
 package com.example.vehicle.components;
 
+import com.example.vehicle.dtos.response.Vehicle.DriverDTO;
 import com.example.vehicle.dtos.response.Vehicle.VehicleLocationResponse;
 import com.example.vehicle.entities.vehicle.Vehicle;
 import com.example.vehicle.repositories.VehicleRepository;
@@ -39,6 +40,11 @@ public class VehicleLocationScheduler {
                         .latitude(v.getLatitude())
                         .longitude(v.getLongitude())
                         .updatedAt(LocalDateTime.now())
+                        // Lấy tài xế đầu tiên, nếu không có thì trả về null
+                        .driver(v.getDrivers().stream().findFirst()
+                                .map(DriverDTO::new) // Chuyển driver thành DriverDTO
+                                .orElse(null))
+                        .vehicleType(v.getVehicleType().getVehicleTypeId())
                         .build())
                 .collect(Collectors.toList());
 
