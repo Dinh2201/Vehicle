@@ -28,40 +28,38 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
 
         VehicleType saved = vehicleTypeRepository.save(vehicleType);
 
-        return vehicleTypeMapper.toCreationResponse(saved);
+        return vehicleTypeMapper.toResponse(saved);
     }
 
     @Override
     public List<VehicleTypeResponse> getAllVehicleTypes() {
         log.info("VehicleType start get All VehicleTypes ...");
-        List<VehicleType> vehicleTypes = vehicleTypeRepository.findAll();
+        List<VehicleType> vehicleTypes = vehicleTypeRepository.findAllByOrderByVehicleTypeIdAsc();
         List<VehicleTypeResponse> responses = vehicleTypes.stream()
                 .map(
-                        vehicleTypeMapper::toCreationResponse
+                        vehicleTypeMapper::toResponse
                 )
                 .collect(Collectors.toList());
         return responses;
 
     }
 
-    public VehicleType getVehicleTypeEntityById(Long id) {
-        return vehicleTypeRepository.findById(id).orElseThrow(() -> new RuntimeException("VehicleType not found with id " + id));
-    }
-
     @Override
     public VehicleTypeResponse getVehicleTypeById(Long id) {
         log.info("VehicleType start get VehicleType by id ...");
 
-        return vehicleTypeMapper.toCreationResponse(getVehicleTypeEntityById(id));
+        return vehicleTypeMapper.toResponse(vehicleTypeRepository.findById(id).orElseThrow(() -> new RuntimeException("VehicleType not found with id " + id)));
     }
 
     @Override
     public VehicleTypeResponse updateVehicleType(Long id, VehicleTypeCreationRequest request) {
+
         log.info("VehicleType start update VehicleType by id ...");
-        VehicleType vehicleType = getVehicleTypeEntityById(id);
+        VehicleType vehicleType = vehicleTypeRepository.findById(id).orElseThrow(() -> new RuntimeException("VehicleType not found with id " + id));
+
         vehicleTypeMapper.updateVehicleType(vehicleType, request);
         VehicleType newVehicleType = vehicleTypeRepository.save(vehicleType);
-        VehicleTypeResponse response = vehicleTypeMapper.toCreationResponse(newVehicleType);
+        VehicleTypeResponse response = vehicleTypeMapper.toResponse(newVehicleType);
         return response;
     }
 

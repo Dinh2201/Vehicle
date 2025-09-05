@@ -1,10 +1,10 @@
 package com.example.vehicle.dtos.response.Vehicle;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -20,13 +20,18 @@ public class VehicleResponse {
 
     String status;
 
-    LocalDate signupDate;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    LocalDateTime signupDate;
 
-     VehicleTypeDTO vehicleType;
+    Double latitude;
 
-     List<DriverDTO> drivers;
-//    long vehicleType; // chứa ID
-//
+    Double longitude;
+
+    long vehicleType; // chứa ID
+
+     DriverDTO driver;
+
+////     VehicleTypeDTO vehicleType;
 //    List<Long> drivers;
 }
 

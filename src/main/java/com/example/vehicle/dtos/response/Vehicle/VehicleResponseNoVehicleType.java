@@ -1,17 +1,18 @@
-package com.example.vehicle.dtos.request.Vehicle;
+package com.example.vehicle.dtos.response.Vehicle;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class VehicleUpdateRequest {
+public class VehicleResponseNoVehicleType {
+
+    Long vehicleId;
 
     String vehicleName;
 
@@ -21,7 +22,9 @@ public class VehicleUpdateRequest {
 
     LocalDate signupDate;
 
-    long vehicleType; // chứa ID
+    Double latitude;
 
-    Long driver;
+    Double longitude;
+
+    DriverDTO driver;
 }

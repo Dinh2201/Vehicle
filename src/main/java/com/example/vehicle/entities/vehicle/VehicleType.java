@@ -15,7 +15,12 @@ import java.util.List;
 @Builder
 public class VehicleType {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "vehicle_type_seq_gen")
+    @SequenceGenerator(
+            name = "vehicle_type_seq_gen",
+            sequenceName = "vehicle_type_vehicle_type_id_seq",  // trùng với tên sequence trong PostgreSQL
+            allocationSize = 1
+    )
     @Column(name = "vehicle_type_id")
     private long vehicleTypeId;
 
