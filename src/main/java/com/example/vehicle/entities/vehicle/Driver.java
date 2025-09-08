@@ -50,4 +50,5 @@ public class Driver {
 
     @ManyToMany(mappedBy = "drivers")
     private Set<Vehicle> vehicles = new HashSet<>();
+
 }
