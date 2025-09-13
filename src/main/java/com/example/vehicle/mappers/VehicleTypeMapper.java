@@ -1,8 +1,8 @@
 package com.example.vehicle.mappers;
 
 import com.example.vehicle.dtos.request.VehicleType.VehicleTypeCreationRequest;
-import com.example.vehicle.dtos.response.VehicleType.VehicleTypeResponse;
-import com.example.vehicle.entities.vehicle.VehicleType;
+import com.example.vehicle.dtos.response.vehicletype.VehicleTypeResponse;
+import com.example.vehicle.entities.VehicleType;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", uses = VehicleMapper.class)

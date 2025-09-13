@@ -1,6 +1,6 @@
 package com.example.vehicle.repositories;
 
-import com.example.vehicle.entities.vehicle.Vehicle;
+import com.example.vehicle.entities.Vehicle;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

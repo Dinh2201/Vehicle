@@ -1,4 +1,4 @@
-package com.example.vehicle.dtos.response.Vehicle;
+package com.example.vehicle.dtos.response.vehicle;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,6 +12,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class VehicleTypeDTO {
      Long vehicleTypeId;
+
      String name;
+
      String description;
 }

@@ -1,8 +1,9 @@
-package com.example.vehicle.entities.vehicle;
+package com.example.vehicle.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class VehicleType {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "vehicle_type_seq_gen")
@@ -22,13 +24,13 @@ public class VehicleType {
             allocationSize = 1
     )
     @Column(name = "vehicle_type_id")
-    private long vehicleTypeId;
+     long vehicleTypeId;
 
-    private String name;
+     String name;
 
-    private String description;
+     String description;
 
     @OneToMany(mappedBy = "vehicleType")
     @JsonIgnore
-    private List<Vehicle> vehicles ;
+     List<Vehicle> vehicles ;
 }

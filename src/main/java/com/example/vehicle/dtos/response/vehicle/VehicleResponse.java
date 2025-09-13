@@ -1,4 +1,4 @@
-package com.example.vehicle.dtos.response.Vehicle;
+package com.example.vehicle.dtos.response.vehicle;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
@@ -29,7 +29,7 @@ public class VehicleResponse {
 
     long vehicleType; // chứa ID
 
-     DriverDTO driver;
+    DriverDTO driver;
 
 ////     VehicleTypeDTO vehicleType;
 //    List<Long> drivers;

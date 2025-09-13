@@ -7,6 +7,7 @@ public enum ErrorCode {
     VEHICLE_TYPE_EXCEPTION(1002,"Vehicle type not found"),
     DRIVER_EXCEPTION(1003,"Driver not found"),
     VEHICLE_EXCEPTION(1004,"Vehicle not found"),
+    HISTORY_NOT_FOUND(1005,"No history records found for this driver"),
     VALIDATION(4000,"Validation error"),
     ;
     private int code;

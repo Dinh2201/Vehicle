@@ -1,7 +1,6 @@
-package com.example.vehicle.dtos.response.VehicleType;
+package com.example.vehicle.dtos.response.vehicletype;
 
-import com.example.vehicle.dtos.response.Vehicle.VehicleResponse;
-import com.example.vehicle.dtos.response.Vehicle.VehicleResponseNoVehicleType;
+import com.example.vehicle.dtos.response.vehicle.VehicleResponseNoVehicleType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

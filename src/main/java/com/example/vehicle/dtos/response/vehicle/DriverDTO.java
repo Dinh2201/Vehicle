@@ -1,6 +1,6 @@
-package com.example.vehicle.dtos.response.Vehicle;
+package com.example.vehicle.dtos.response.vehicle;
 
-import com.example.vehicle.entities.vehicle.Driver;
+import com.example.vehicle.entities.Driver;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;

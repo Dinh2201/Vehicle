@@ -1,4 +1,4 @@
-package com.example.vehicle.dtos.response.Vehicle;
+package com.example.vehicle.dtos.response.vehicle;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

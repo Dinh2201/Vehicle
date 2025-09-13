@@ -1,7 +1,8 @@
 package com.example.vehicle.controllers;
 
 import com.example.vehicle.dtos.request.Driver.DriverCreationRequest;
-import com.example.vehicle.dtos.response.Driver.DriverResponse;
+import com.example.vehicle.dtos.response.ApiResponse;
+import com.example.vehicle.dtos.response.driver.DriverResponse;
 import com.example.vehicle.services.DriverService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -19,39 +20,46 @@ public class DriverController {
     DriverService driverService;
 
     @PostMapping("/drivers")
-    public ResponseEntity<DriverResponse> createDriver (@RequestBody DriverCreationRequest request){
-        return ResponseEntity.ok(driverService.createDriver(request));
+    public ResponseEntity<ApiResponse<DriverResponse>> createDriver (@RequestBody DriverCreationRequest request){
+        ApiResponse<DriverResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(driverService.createDriver(request));
+        return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping("/drivers")
-    public ResponseEntity<List<DriverResponse>> getAllDrivers(){
-        return ResponseEntity.ok(driverService.getAllDrivers());
+    public ResponseEntity<ApiResponse<List<DriverResponse>>> getAllDrivers(){
+        ApiResponse<List<DriverResponse>> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(driverService.getAllDrivers());
+        return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping("/driver/{id}")
-    public ResponseEntity<DriverResponse> getDriverById(@PathVariable Long id){
-        return ResponseEntity.ok(driverService.getDriverById(id));
+    public ResponseEntity<ApiResponse<DriverResponse>> getDriverById(@PathVariable Long id){
+        ApiResponse<DriverResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(driverService.getDriverById(id));
+        return ResponseEntity.ok(apiResponse);
     }
 
     @PutMapping("/driver/update/{id}")
-    public ResponseEntity<DriverResponse> updateDriver(@PathVariable Long id, @RequestBody DriverCreationRequest request){
-        return ResponseEntity.ok(driverService.updateDriver(id, request));
+    public ResponseEntity<ApiResponse<DriverResponse>> updateDriver(@PathVariable Long id, @RequestBody DriverCreationRequest request){
+        ApiResponse<DriverResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(driverService.updateDriver(id, request));
+        return ResponseEntity.ok(apiResponse);
     }
 
     @DeleteMapping("/driver/delete")
-    public ResponseEntity<Boolean> deleteDriver(@RequestBody List<Long> ids){
-        return ResponseEntity.ok(driverService.deleteDriver(ids));
+    public ResponseEntity<ApiResponse<Boolean>> deleteDriver(@RequestBody List<Long> ids){
+        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(driverService.deleteDriver(ids));
+        return ResponseEntity.ok(apiResponse);
 
     }
 
-//    // Endpoint để chấp nhận tài xế
-//    @PutMapping("/driver/{driverId}/accept")
-//    public ResponseEntity<Boolean> isAcceptBooking(@PathVariable Long driverId, @RequestBody DispatchRequest dispatchRequest) {
-//        return ResponseEntity.ok(driverService.acceptBooking(driverId, dispatchRequest));
-//    }
     // Endpoint để chấp nhận tài xế
     @PutMapping("/driver/{driverId}/accept")
-    public ResponseEntity<Boolean> isAcceptBooking(@PathVariable Long driverId, @RequestParam("action") String action) {
-        return ResponseEntity.ok(driverService.acceptBooking(driverId, action));
+    public ResponseEntity<ApiResponse<Boolean>> isAcceptBooking(@PathVariable Long driverId, @RequestParam("action") String action) {
+        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(driverService.acceptBooking(driverId, action));
+        return ResponseEntity.ok(apiResponse);
     }
 }

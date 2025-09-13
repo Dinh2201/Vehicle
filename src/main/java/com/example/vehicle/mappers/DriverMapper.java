@@ -1,8 +1,8 @@
 package com.example.vehicle.mappers;
 
 import com.example.vehicle.dtos.request.Driver.DriverCreationRequest;
-import com.example.vehicle.dtos.response.Driver.DriverResponse;
-import com.example.vehicle.entities.vehicle.Driver;
+import com.example.vehicle.dtos.response.driver.DriverResponse;
+import com.example.vehicle.entities.Driver;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
