@@ -1,7 +1,8 @@
-package com.example.vehicle.entities.vehicle;
+package com.example.vehicle.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -13,6 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Vehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "vehicle_seq_gen")
@@ -22,28 +24,28 @@ public class Vehicle {
             allocationSize = 1
     )
     @Column(name = "vehicle_id")
-    private long vehicleId;
+     long vehicleId;
 
     @Column(name = "vehicle_name")
-    private String vehicleName;
+     String vehicleName;
 
     @Column(name = "license_plate", unique = true, nullable = false)
-    private String licensePlate;
+     String licensePlate;
 
-    private String status;
+     String status;
 
     @Column(name = "signup_date")
-    private LocalDateTime signupDate;
+     LocalDateTime signupDate;
 
     @Column(name = "latitude")
-    private Double latitude;
+     Double latitude;
 
     @Column(name = "longitude")
-    private Double longitude;
+     Double longitude;
 
     @ManyToOne
     @JoinColumn(name = "vehicle_type_id")
-    private VehicleType vehicleType;
+     VehicleType vehicleType;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -51,5 +53,5 @@ public class Vehicle {
             joinColumns = @JoinColumn(name = "vehicle_id"),
             inverseJoinColumns = @JoinColumn(name = "driver_id")
     )
-    private Set<Driver> drivers = new HashSet<>();
+     Set<Driver> drivers = new HashSet<>();
 }

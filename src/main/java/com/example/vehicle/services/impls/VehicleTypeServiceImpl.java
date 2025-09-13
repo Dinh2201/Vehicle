@@ -2,7 +2,7 @@ package com.example.vehicle.services.impls;
 
 import com.example.vehicle.dtos.request.VehicleType.VehicleTypeCreationRequest;
 import com.example.vehicle.dtos.response.VehicleType.VehicleTypeResponse;
-import com.example.vehicle.entities.vehicle.VehicleType;
+import com.example.vehicle.entities.VehicleType;
 import com.example.vehicle.mappers.VehicleTypeMapper;
 import com.example.vehicle.repositories.VehicleTypeRepository;
 import com.example.vehicle.services.VehicleTypeService;

@@ -42,8 +42,6 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers("/api/v1/vehicle/update/*")
                                         .permitAll()
-                                        .requestMatchers("/api/v1/vehicle/*/location")
-                                        .permitAll()
                                         .requestMatchers("/api/v1/vehicle/delete")
                                         .permitAll()
 
@@ -67,6 +65,9 @@ public class SecurityConfig {
                                         .requestMatchers("/api/v1/vehicletype/update/*")
                                         .permitAll()
                                         .requestMatchers("/api/v1/vehicletype/delete")
+                                        .permitAll()
+
+                                        .requestMatchers("/api/v1/history")
                                         .permitAll()
 
                                         .anyRequest()

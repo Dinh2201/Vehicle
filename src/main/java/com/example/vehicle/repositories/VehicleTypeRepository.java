@@ -1,6 +1,6 @@
 package com.example.vehicle.repositories;
 
-import com.example.vehicle.entities.vehicle.VehicleType;
+import com.example.vehicle.entities.VehicleType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

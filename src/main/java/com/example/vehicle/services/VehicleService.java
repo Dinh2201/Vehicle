@@ -15,7 +15,7 @@ public interface VehicleService {
 
     VehicleResponse updateVehicle(Long id, VehicleUpdateRequest request);
 
-    VehicleResponse updateVehicleLocation(Long id);
+//    VehicleResponse updateVehicleLocation(Long id);
 
     boolean deleteVehicle(List<Long> ids);
 }

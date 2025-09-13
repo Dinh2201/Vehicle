@@ -3,9 +3,9 @@ package com.example.vehicle.mappers;
 import com.example.vehicle.dtos.response.Vehicle.DriverDTO;
 import com.example.vehicle.dtos.response.Vehicle.VehicleResponse;
 import com.example.vehicle.dtos.response.Vehicle.VehicleResponseNoVehicleType;
-import com.example.vehicle.entities.vehicle.Driver;
-import com.example.vehicle.entities.vehicle.Vehicle;
-import com.example.vehicle.entities.vehicle.VehicleType;
+import com.example.vehicle.entities.Driver;
+import com.example.vehicle.entities.Vehicle;
+import com.example.vehicle.entities.VehicleType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

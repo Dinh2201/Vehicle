@@ -24,38 +24,37 @@ public class VehicleController {
 
     @PostMapping("/vehicles")
     public ResponseEntity<ApiResponse<VehicleResponse>> createVehicle(@RequestBody @Valid VehicleCreationRequest request) {
-            ApiResponse<VehicleResponse> response = new ApiResponse<>();
-            response.setResult(vehicleService.createVehicle(request));
-            return ResponseEntity.ok(response);
+            ApiResponse<VehicleResponse> apiResponse = new ApiResponse<>();
+            apiResponse.setResult(vehicleService.createVehicle(request));
+            return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping("/vehicles")
-    public ResponseEntity<List<VehicleResponse> > getAllVehicles() {
-        return ResponseEntity.ok(vehicleService.getAllVehicles());
+    public ResponseEntity<ApiResponse<List<VehicleResponse>> > getAllVehicles() {
+        ApiResponse<List<VehicleResponse>> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(vehicleService.getAllVehicles());
+        return ResponseEntity.ok(apiResponse);
    }
 
     @GetMapping("/vehicle/{id}")
     public ResponseEntity<ApiResponse<VehicleResponse>> getVehicleById(@PathVariable Long id) {
-        ApiResponse<VehicleResponse> response = new ApiResponse<>();
-        response.setResult(vehicleService.getVehicleById(id));
-        return ResponseEntity.ok(response);
+        ApiResponse<VehicleResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(vehicleService.getVehicleById(id));
+        return ResponseEntity.ok(apiResponse);
    }
 
    @PutMapping("/vehicle/update/{id}")
     public ResponseEntity<ApiResponse<VehicleResponse>> updateVehicle(@PathVariable Long id, @RequestBody VehicleUpdateRequest request) {
-        ApiResponse<VehicleResponse> response = new ApiResponse<>();
-        response.setResult(vehicleService.updateVehicle(id, request));
-        return ResponseEntity.ok(response);
-   }
-
-   @PutMapping("/vehicle/{id}/location")
-   public ResponseEntity<VehicleResponse> updateVehicleLocation(@PathVariable Long id) {
-        return ResponseEntity.ok(vehicleService.updateVehicleLocation(id));
+        ApiResponse<VehicleResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(vehicleService.updateVehicle(id, request));
+        return ResponseEntity.ok(apiResponse);
    }
 
    @DeleteMapping("/vehicle/delete")
-    public boolean deleteVehicle(@RequestBody List<Long> ids) {
-        return vehicleService.deleteVehicle(ids);
+    public ResponseEntity<ApiResponse<Boolean>> deleteVehicle(@RequestBody List<Long> ids) {
+        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(vehicleService.deleteVehicle(ids));
+        return ResponseEntity.ok(apiResponse);
    }
 
 }
