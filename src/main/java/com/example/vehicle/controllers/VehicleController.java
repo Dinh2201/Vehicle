@@ -3,7 +3,7 @@ package com.example.vehicle.controllers;
 import com.example.vehicle.dtos.request.Vehicle.VehicleCreationRequest;
 import com.example.vehicle.dtos.request.Vehicle.VehicleUpdateRequest;
 import com.example.vehicle.dtos.response.ApiResponse;
-import com.example.vehicle.dtos.response.Vehicle.VehicleResponse;
+import com.example.vehicle.dtos.response.vehicle.VehicleResponse;
 import com.example.vehicle.services.VehicleService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;

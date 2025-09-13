@@ -38,13 +38,5 @@ public class DriverVehicleHistory {
     @Column(name = "end_date")
     LocalDateTime endDate;
 
-    @Column(name = "created_at", updatable = false)
-    LocalDateTime createdAt = LocalDateTime.now();
-
-    @Column(name = "booking_status")
-    private String bookingStatus;
-
-    @Column(name = "updated_at")
-    LocalDateTime updatedAt ;
 
 }

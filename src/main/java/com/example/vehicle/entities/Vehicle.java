@@ -5,8 +5,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity(name = "vehicle")
 @Getter
@@ -47,11 +45,7 @@ public class Vehicle {
     @JoinColumn(name = "vehicle_type_id")
      VehicleType vehicleType;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "vehicle_drivers",
-            joinColumns = @JoinColumn(name = "vehicle_id"),
-            inverseJoinColumns = @JoinColumn(name = "driver_id")
-    )
-     Set<Driver> drivers = new HashSet<>();
+    @OneToOne
+    @JoinColumn(name = "driver_id", unique = true)  // unique để đảm bảo 1-1
+     Driver driver;
 }

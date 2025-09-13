@@ -23,5 +23,5 @@ public class VehicleUpdateRequest {
 
     long vehicleType; // chứa ID
 
-    Long driver;
+    long driver;
 }

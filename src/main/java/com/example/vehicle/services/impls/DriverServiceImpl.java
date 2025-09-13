@@ -1,7 +1,7 @@
 package com.example.vehicle.services.impls;
 
 import com.example.vehicle.dtos.request.Driver.DriverCreationRequest;
-import com.example.vehicle.dtos.response.Driver.DriverResponse;
+import com.example.vehicle.dtos.response.driver.DriverResponse;
 import com.example.vehicle.entities.Driver;
 import com.example.vehicle.entities.DriverVehicleHistory;
 import com.example.vehicle.entities.Vehicle;
@@ -65,15 +65,6 @@ public class DriverServiceImpl implements DriverService {
         Driver driver = driverRepository.findById(id).orElseThrow(() -> new RuntimeException("Driver not found by id: " + id));
         driverMapper.updateDriver(driver, request);
 
-        if (request.getStatus() != null) {
-
-            Set<Vehicle> vehicles = driver.getVehicles();
-
-            for (Vehicle vehicle : vehicles) {  //là cú pháp của vòng lặp for-each (enhanced for loop) trong Java.
-                vehicle.setStatus(request.getStatus()); // Đồng bộ status
-                vehicleRepository.save(vehicle); // Lưu vehicle
-            }
-        }
         Driver newDriver = driverRepository.save(driver);
         return driverMapper.toResponse(newDriver);
     }
@@ -93,12 +84,12 @@ public class DriverServiceImpl implements DriverService {
 
         // Gỡ liên kết driver khỏi tất cả vehicle tương ứng
         for (Driver driver : drivers) {
-            Set<Vehicle> vehicles = driver.getVehicles();
-            for (Vehicle vehicle : vehicles) {
-                vehicle.getDrivers().remove(driver);
+            Vehicle vehicle = driver.getVehicle();
+            if (vehicle != null) {
+                vehicle.setDriver(null);
+                vehicleRepository.save(vehicle);
             }
         }
-
 
         driverRepository.deleteAll(drivers);
         return true;
@@ -131,21 +122,17 @@ public class DriverServiceImpl implements DriverService {
             return false;
         }
 
-        Driver driver = driverRepository.findById(id).orElseThrow(() -> new RuntimeException("Driver not found by id: " + id));
+        Driver driver = driverRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.DRIVER_EXCEPTION));
 
         DriverVehicleHistory history = historyRepository.findByDriver(driver )
                 .orElseThrow(() -> new AppException(ErrorCode.HISTORY_NOT_FOUND));
 
         switch (bookingAction) {
             case ACCEPT :
-                history.setBookingStatus("ACCEPTED");
-                history.setUpdatedAt(LocalDateTime.now());
-                historyRepository.save(history);
+
                 return true;
             case REJECT:
-                history.setBookingStatus("REJECTED");
-                history.setUpdatedAt(LocalDateTime.now());
-                historyRepository.save(history);
+
                 return false;
 
             default:

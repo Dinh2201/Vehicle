@@ -6,8 +6,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity(name = "driver")
 @Getter
@@ -24,7 +22,7 @@ public class Driver {
             sequenceName = "driver_driver_id_seq",  // trùng với tên sequence trong PostgreSQL
             allocationSize = 1
     )
-        @Column(name = "driver_id")
+    @Column(name = "driver_id")
      long driverId;
 
      String name;
@@ -50,9 +48,7 @@ public class Driver {
     @Column(name = "avg_rating", precision = 5, scale = 2)
      BigDecimal avgRating;
 
-    @ManyToMany(mappedBy = "drivers")
-     Set<Vehicle> vehicles = new HashSet<>();
-
-
+    @OneToOne(mappedBy = "driver")
+     Vehicle vehicle;
 
 }

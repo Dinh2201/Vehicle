@@ -2,8 +2,7 @@ package com.example.vehicle.services.impls;
 
 import com.example.vehicle.dtos.request.Vehicle.VehicleCreationRequest;
 import com.example.vehicle.dtos.request.Vehicle.VehicleUpdateRequest;
-import com.example.vehicle.dtos.response.DriverVehicleHistoryResponse;
-import com.example.vehicle.dtos.response.Vehicle.VehicleResponse;
+import com.example.vehicle.dtos.response.vehicle.VehicleResponse;
 import com.example.vehicle.entities.Driver;
 import com.example.vehicle.entities.DriverVehicleHistory;
 import com.example.vehicle.entities.Vehicle;
@@ -16,7 +15,6 @@ import com.example.vehicle.repositories.DriverVehicleHistoryRepository;
 import com.example.vehicle.repositories.VehicleRepository;
 import com.example.vehicle.repositories.VehicleTypeRepository;
 import com.example.vehicle.services.VehicleService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -60,8 +58,6 @@ public class VehicleServiceImpl implements VehicleService {
         Driver driver = driverRepository.findById(request.getDriver())
                 .orElseThrow(() -> new AppException(ErrorCode.DRIVER_EXCEPTION));
 
-        Set<Driver> drivers = new HashSet<>();
-        drivers.add(driver);
 
         // ==== Random vị trí (lat/lon) trong khoảng giới hạn ====
 //        Double latitude = null;
@@ -83,7 +79,7 @@ public class VehicleServiceImpl implements VehicleService {
                 .latitude(latitude)
                 .longitude(longitude)
                 .vehicleType(vehicleType)
-                .drivers(drivers)
+                .driver(driver)
                 .build();
 
         Vehicle response = vehicleRepository.save(vehicle);
@@ -144,15 +140,12 @@ public class VehicleServiceImpl implements VehicleService {
                 .orElseThrow(() -> new AppException(ErrorCode.DRIVER_EXCEPTION));
 
         log.info("Lấy danh sách các tài xế (drivers) hiện tại của xe (vehicle)");
-        Set<Driver> currentDrivers = vehicle.getDrivers();
-        if (currentDrivers == null) {
-            currentDrivers = new HashSet<>();
-        }
+        Driver oldDriver = vehicle.getDriver();
 
         log.info("Nếu driver hiện tại khác với driver mới");
-        if (!currentDrivers.contains(newDriver)) {
+        if (oldDriver == null || oldDriver.getDriverId() != newDriver.getDriverId()) {
             // Lưu lịch sử cho tất cả các driver hiện tại
-            for (Driver oldDriver : currentDrivers) {
+            if ( oldDriver != null) {
                 DriverVehicleHistory oldHistory = driverVehicleHistoryRepository.findTopByDriverAndVehicleAndEndDateIsNull(oldDriver, vehicle);
                 if (oldHistory != null) {
                     oldHistory.setEndDate(LocalDateTime.now());  // Cập nhật end_date cho driver cũ
@@ -167,11 +160,7 @@ public class VehicleServiceImpl implements VehicleService {
                 newHistory.setStartDate(LocalDateTime.now()); // Start date cho driver mới
                 driverVehicleHistoryRepository.save(newHistory);
 
-
-            // Gán driver mới vào set
-            Set<Driver> newDrivers = new HashSet<>();
-            newDrivers.add(newDriver);
-            vehicle.setDrivers(newDrivers);
+            vehicle.setDriver(newDriver);
         }
 
         log.info("Lưu lại vehicle đã cập nhật");

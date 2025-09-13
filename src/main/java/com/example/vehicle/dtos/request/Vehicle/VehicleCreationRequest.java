@@ -34,5 +34,5 @@ public class VehicleCreationRequest {
      long vehicleType; // chứa ID
 
     @NotNull(message = "ID tài xế không được rỗng")
-     Long driver;
+     long driver;
 }

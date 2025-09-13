@@ -21,5 +21,4 @@ public class DriverVehicleHistoryRequest {
 
      LocalDateTime endDate;
 
-     LocalDateTime createdAt;
 }

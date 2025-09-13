@@ -2,7 +2,7 @@ package com.example.vehicle.controllers;
 
 import com.example.vehicle.dtos.request.Driver.DriverCreationRequest;
 import com.example.vehicle.dtos.response.ApiResponse;
-import com.example.vehicle.dtos.response.Driver.DriverResponse;
+import com.example.vehicle.dtos.response.driver.DriverResponse;
 import com.example.vehicle.services.DriverService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
