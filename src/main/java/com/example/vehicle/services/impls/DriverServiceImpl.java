@@ -2,6 +2,7 @@ package com.example.vehicle.services.impls;
 
 import com.example.vehicle.dtos.request.Driver.DriverCreationRequest;
 import com.example.vehicle.dtos.response.driver.DriverResponse;
+import com.example.vehicle.entities.BookingHistory;
 import com.example.vehicle.entities.Driver;
 import com.example.vehicle.entities.DriverVehicleHistory;
 import com.example.vehicle.entities.Vehicle;
@@ -9,6 +10,7 @@ import com.example.vehicle.enums.BookingAction;
 import com.example.vehicle.exceptions.AppException;
 import com.example.vehicle.exceptions.ErrorCode;
 import com.example.vehicle.mappers.DriverMapper;
+import com.example.vehicle.repositories.BookingHistoryRepository;
 import com.example.vehicle.repositories.DriverRepository;
 import com.example.vehicle.repositories.DriverVehicleHistoryRepository;
 import com.example.vehicle.repositories.VehicleRepository;
@@ -31,6 +33,7 @@ public class DriverServiceImpl implements DriverService {
     private final DriverMapper driverMapper;
     private final VehicleRepository vehicleRepository;
     private final DriverVehicleHistoryRepository historyRepository;
+    private final BookingHistoryRepository bookingHistoryRepository;
 
 
     @Override
@@ -124,15 +127,26 @@ public class DriverServiceImpl implements DriverService {
 
         Driver driver = driverRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.DRIVER_EXCEPTION));
 
-        DriverVehicleHistory history = historyRepository.findByDriver(driver )
-                .orElseThrow(() -> new AppException(ErrorCode.HISTORY_NOT_FOUND));
+        BookingHistory bookingHistory = new BookingHistory();
+        bookingHistory.setDriver(driver);
+        bookingHistory.setVehicle(driver.getVehicle());
+        bookingHistory.setUpdatedAt(LocalDateTime.now());
 
         switch (bookingAction) {
             case ACCEPT :
+                bookingHistory.setBookingStatus("ACCEPTED");
 
+                bookingHistoryRepository.save(bookingHistory);
                 return true;
             case REJECT:
+                bookingHistory.setBookingStatus("REJECTED");
 
+                bookingHistoryRepository.save(bookingHistory);
+                return false;
+
+            case CANCEL:
+                bookingHistory.setBookingStatus("CANCELLED");
+                bookingHistoryRepository.save(bookingHistory);
                 return false;
 
             default:
