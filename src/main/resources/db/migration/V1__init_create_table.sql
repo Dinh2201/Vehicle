@@ -45,6 +45,3 @@ CREATE TABLE vehicle (
 CREATE SEQUENCE vehicle_vehicle_id_seq START WITH 1 INCREMENT BY 1;
 
 
--- SELECT setval('vehicle_type_vehicle_type_id_seq', (SELECT MAX(vehicle_type_id) FROM vehicle_type));
--- SELECT setval('driver_driver_id_seq', (SELECT MAX(driver_id) FROM driver));
--- SELECT setval('vehicle_vehicle_id_seq', (SELECT MAX(vehicle_id) FROM vehicle));

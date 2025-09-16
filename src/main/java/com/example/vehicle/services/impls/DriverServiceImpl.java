@@ -4,7 +4,6 @@ import com.example.vehicle.dtos.request.Driver.DriverCreationRequest;
 import com.example.vehicle.dtos.response.driver.DriverResponse;
 import com.example.vehicle.entities.BookingHistory;
 import com.example.vehicle.entities.Driver;
-import com.example.vehicle.entities.DriverVehicleHistory;
 import com.example.vehicle.entities.Vehicle;
 import com.example.vehicle.enums.BookingAction;
 import com.example.vehicle.exceptions.AppException;
@@ -12,7 +11,6 @@ import com.example.vehicle.exceptions.ErrorCode;
 import com.example.vehicle.mappers.DriverMapper;
 import com.example.vehicle.repositories.BookingHistoryRepository;
 import com.example.vehicle.repositories.DriverRepository;
-import com.example.vehicle.repositories.DriverVehicleHistoryRepository;
 import com.example.vehicle.repositories.VehicleRepository;
 import com.example.vehicle.services.DriverService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,7 +29,6 @@ public class DriverServiceImpl implements DriverService {
     private final DriverRepository driverRepository;
     private final DriverMapper driverMapper;
     private final VehicleRepository vehicleRepository;
-    private final DriverVehicleHistoryRepository historyRepository;
     private final BookingHistoryRepository bookingHistoryRepository;
 
 
