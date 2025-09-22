@@ -1,6 +1,6 @@
 package com.example.vehicle.services.impls;
 
-import com.example.vehicle.dtos.request.VehicleType.VehicleTypeCreationRequest;
+import com.example.vehicle.dtos.request.vehicletype.VehicleTypeRequest;
 import com.example.vehicle.dtos.response.vehicletype.VehicleTypeResponse;
 import com.example.vehicle.entities.VehicleType;
 import com.example.vehicle.mappers.VehicleTypeMapper;
@@ -21,7 +21,7 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
     private final VehicleTypeMapper vehicleTypeMapper;
 
     @Override
-    public VehicleTypeResponse create (VehicleTypeCreationRequest request){
+    public VehicleTypeResponse create (VehicleTypeRequest request){
         log.info("VehicleType start create ...");
 
         VehicleType vehicleType = vehicleTypeMapper.toRequest(request);
@@ -35,11 +35,8 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
     public List<VehicleTypeResponse> getAllVehicleTypes() {
         log.info("VehicleType start get All VehicleTypes ...");
         List<VehicleType> vehicleTypes = vehicleTypeRepository.findAllByOrderByVehicleTypeIdAsc();
-        List<VehicleTypeResponse> responses = vehicleTypes.stream()
-                .map(
-                        vehicleTypeMapper::toResponse
-                )
-                .collect(Collectors.toList());
+        List<VehicleTypeResponse> responses = vehicleTypeMapper.toListResponse(vehicleTypes);
+        log.info("VehicleType get All VehicleTypes ...");
         return responses;
 
     }
@@ -52,7 +49,7 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
     }
 
     @Override
-    public VehicleTypeResponse updateVehicleType(Long id, VehicleTypeCreationRequest request) {
+    public VehicleTypeResponse updateVehicleType(Long id, VehicleTypeRequest request) {
 
         log.info("VehicleType start update VehicleType by id ...");
         VehicleType vehicleType = vehicleTypeRepository.findById(id).orElseThrow(() -> new RuntimeException("VehicleType not found with id " + id));

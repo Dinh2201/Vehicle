@@ -4,5 +4,6 @@ public enum DriverStatus {
     ACTIVE,
     INACTIVE,
     PENDING,
-    BANNED
+    BANNED,
+    CANCELLED
 }

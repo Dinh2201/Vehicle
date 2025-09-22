@@ -1,12 +1,13 @@
 package com.example.vehicle.services.impls;
 
-import com.example.vehicle.dtos.request.Vehicle.VehicleCreationRequest;
-import com.example.vehicle.dtos.request.Vehicle.VehicleUpdateRequest;
+import com.example.vehicle.dtos.request.vehicle.VehicleCreationRequest;
+import com.example.vehicle.dtos.request.vehicle.VehicleUpdateRequest;
 import com.example.vehicle.dtos.response.vehicle.VehicleResponse;
 import com.example.vehicle.entities.Driver;
 import com.example.vehicle.entities.DriverVehicleHistory;
 import com.example.vehicle.entities.Vehicle;
 import com.example.vehicle.entities.VehicleType;
+import com.example.vehicle.enums.VehicleStatus;
 import com.example.vehicle.exceptions.AppException;
 import com.example.vehicle.exceptions.ErrorCode;
 import com.example.vehicle.mappers.VehicleMapper;
@@ -21,9 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -60,21 +59,22 @@ public class VehicleServiceImpl implements VehicleService {
 
 
         // ==== Random vị trí (lat/lon) trong khoảng giới hạn ====
-//        Double latitude = null;
-//        Double longitude = null;
-//
-//        if (!"INACTIVE".equalsIgnoreCase(request.getStatus())) {
-//            latitude = getRandomInRange(10.75, 10.85);     // Vĩ độ HCM
-//            longitude = getRandomInRange(106.60, 106.75);  // Kinh độ HCM
-//        }
-        double latitude = getRandomInRange(10.75, 10.85);     // Vĩ độ HCM
-        double longitude = getRandomInRange(106.60, 106.75);  // Kinh độ HCM
+        Double latitude = null;
+        Double longitude = null;
+
+       if ("ACTIVE".equalsIgnoreCase(request.getStatus()) && "ACTIVE".equalsIgnoreCase(driver.getStatus().name())) {
+        // ==== Random vị trí (lat/lon) trong khoảng giới hạn ====
+         latitude = getRandomInRange(10.75, 10.85);     // Vĩ độ HCM
+         longitude = getRandomInRange(106.60, 106.75);  // Kinh độ HCM
         // ======================================================
+    }
+
+        VehicleStatus statusEnum = VehicleStatus.valueOf(request.getStatus().toUpperCase());
 
         Vehicle vehicle = Vehicle.builder()
                 .vehicleName(request.getVehicleName())
                 .licensePlate(request.getLicensePlate())
-                .status(request.getStatus())
+                .status(statusEnum)
                 .signupDate(request.getSignupDate().atTime(LocalTime.now()))
                 .latitude(latitude)
                 .longitude(longitude)
@@ -100,9 +100,10 @@ public class VehicleServiceImpl implements VehicleService {
     public List<VehicleResponse> getAllVehicles() {
         log.info("Start get all vehicle ...");
         List<Vehicle> vehicles = vehicleRepository.findAllByOrderByVehicleIdAsc();
-        return vehicles.stream()
-                .map(vehicleMapper::toResponse)
-                .collect(Collectors.toList());
+
+        List<VehicleResponse> responses = vehicleMapper.toListResponse(vehicles);
+        log.info("Vehicles get all successfully");
+        return responses;
     }
 
     @Override
@@ -117,9 +118,12 @@ public class VehicleServiceImpl implements VehicleService {
         Vehicle vehicle = vehicleRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.VEHICLE_EXCEPTION));
 
+
         vehicle.setVehicleName(vehicleUpdateRequest.getVehicleName());
         vehicle.setLicensePlate(vehicleUpdateRequest.getLicensePlate());
-        vehicle.setStatus(vehicleUpdateRequest.getStatus());
+
+        VehicleStatus statusEnum = VehicleStatus.valueOf(vehicleUpdateRequest.getStatus().toUpperCase());
+        vehicle.setStatus(statusEnum);
 
         if ("INACTIVE".equals(vehicleUpdateRequest.getStatus())) {
             vehicle.setLatitude(null);

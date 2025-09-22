@@ -94,16 +94,6 @@ public class VehicleLocationScheduler {
         // Lấy tất cả vehicle từ Redis
         List<VehicleLocationResponse> vehiclesFromRedis = redisService.getValue("vehicles::all", new TypeReference<>() {});
 
-//        if (vehiclesFromRedis != null) {
-//            // Cập nhật vị trí trong DB với dữ liệu lấy từ Redis
-//            List<Vehicle> vehiclesToUpdate = vehiclesFromRedis.stream()
-//                    .map(dto -> {
-//                        Vehicle v = vehicleRepository.findById(dto.getVehicleId()).orElse(new Vehicle());
-//                        v.setLatitude(dto.getLatitude());
-//                        v.setLongitude(dto.getLongitude());
-//                        return v;
-//                    })
-//                    .collect(Collectors.toList());
         if (vehiclesFromRedis != null) {
             List<Vehicle> vehiclesToUpdate = vehiclesFromRedis.stream()
                     .map(dto -> vehicleRepository.findById(dto.getVehicleId()).orElse(null))

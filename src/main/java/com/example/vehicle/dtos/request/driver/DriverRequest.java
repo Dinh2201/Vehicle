@@ -1,6 +1,5 @@
-package com.example.vehicle.dtos.request.Driver;
+package com.example.vehicle.dtos.request.driver;
 
-import jakarta.persistence.Column;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,7 +10,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DriverCreationRequest {
+public class DriverRequest {
 
      String name;
 

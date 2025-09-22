@@ -56,6 +56,8 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers("/api/v1/driver/*/accept")
                                         .permitAll()
+                                        .requestMatchers("/api/v1/driver/*/notifications")
+                                        .permitAll()
 
 //                                        Vehicle Type
                                         .requestMatchers("/api/v1/vehicletypes")
@@ -69,6 +71,14 @@ public class SecurityConfig {
 
                                         .requestMatchers("/api/v1/history")
                                         .permitAll()
+
+                                        .requestMatchers("/api/v1/booking_history")
+                                        .permitAll()
+
+                                        // Mock
+                                        .requestMatchers("/api/v1/bookings/*/accept").permitAll()
+                                        .requestMatchers("/api/v1/bookings/*/reject").permitAll()
+                                        .requestMatchers("/api/v1/bookings/*/cancel").permitAll()
 
                                         .anyRequest()
                                         .authenticated())

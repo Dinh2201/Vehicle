@@ -1,0 +1,171 @@
+openapi: 3.0.1
+info:
+  title: Swagger OpenAPI
+  version: v0
+  description: API cho việc quản lý vehicle.
+
+servers:
+  - url: http://localhost:8080/api
+    description: Generated server url
+
+paths:
+  "/v1/driver/create":
+    post:
+      summary: Create new driver
+      tags:
+        - DriverResponse
+      operationId: createDriver
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DriverRequest'
+      responses:
+        '201':
+          description: Create successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DriverResponse'
+
+  "/v1/drivers":
+    get:
+      summary: Get all driver
+      tags:
+        - DriverResponse
+      operationId: getAllDrivers
+      responses:
+        '200':
+          description: Get all driver successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DriverResponse'
+
+  "/v1/driver/{id}":
+    get:
+      summary: Get driver by id
+      tags:
+        - DriverResponse
+      operationId: getDriverById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Id of driver
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Get driver by id successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DriverResponse'
+
+  "/driver/update/{id}":
+    put:
+      summary: Update driver
+      tags:
+        - DriverResponse
+      operationId: updateDriver
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Id of driver
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DriverRequest'
+      responses:
+        '200':
+          description: Update driver successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DriverResponse'
+
+
+components:
+  schemas:
+    Drivers:
+      type: array
+      items:
+        $ref: '#/components/schemas/DriverResponse'
+
+    DriverResponse:
+      type: object
+      properties:
+        driverId:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: Nguyen Van A
+        age:
+          type: string
+          example: "35"
+        phoneNumber:
+          type: string
+          example: "0123456789"
+        address:
+          type: string
+          example: Go Vap, Ho Chi Minh
+        identityCard:
+          type: string
+          example: "A12345678"
+        sex:
+          type: string
+          example: "Male"
+        driverLicense:
+          type: string
+          example: "DL123456789"
+        status:
+          type: string
+          example: "ACTIVE"
+        avgRating:
+            type: number
+            format: decimal
+            example: 4.5
+
+    DriverRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Nguyen Van B
+        age:
+          type: string
+          example: "35"
+        phoneNumber:
+          type: string
+          example: "0123456789"
+        address:
+          type: string
+          example: Go Vap, Ho Chi Minh
+        identityCard:
+          type: string
+          example: "A12345678"
+        sex:
+          type: string
+          example: "Male"
+        driverLicense:
+          type: string
+          example: "DL123456789"
+        status:
+          type: string
+          example: "ACTIVE"
+        avgRating:
+          type: number
+          format: decimal
+          example: 4.5
+

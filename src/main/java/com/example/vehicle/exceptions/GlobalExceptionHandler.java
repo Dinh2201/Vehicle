@@ -12,11 +12,13 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+//    @Autowired
+//    private MessageSource messageSource;
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<String>> handleException(Exception exception) {
         ApiResponse<String> apiResponse = new ApiResponse<>();
-        apiResponse.setCode(ErrorCode.UNCATEGORIED_EXCEPTION.getCode());
+        apiResponse.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
         apiResponse.setMessage(exception.getMessage());
         return ResponseEntity.badRequest().body(apiResponse);
     }
@@ -24,8 +26,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AppException.class)
     public ResponseEntity<ApiResponse<String>> handleAppException(AppException exception) {
         ErrorCode errorCode = exception.getErrorCode();
+
         ApiResponse<String> apiResponse = new ApiResponse<>();
         apiResponse.setCode(errorCode.getCode());
+
+
         apiResponse.setMessage(errorCode.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
     }

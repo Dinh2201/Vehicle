@@ -1,5 +1,7 @@
 package com.example.vehicle.dtos.response;
 
+import com.example.vehicle.dtos.response.bookinghistory.DriverSummary;
+import com.example.vehicle.dtos.response.bookinghistory.VehicleSummary;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -13,9 +15,9 @@ import java.time.LocalDateTime;
 public class DriverVehicleHistoryResponse {
     Long historyId;
 
-    Long vehicleId;
+    VehicleSummary vehicle;
 
-    Long driverId;
+    DriverSummary driver;
 
     LocalDateTime startDate;
 

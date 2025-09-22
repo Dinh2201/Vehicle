@@ -7,7 +7,6 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface DriverVehicleHistoryMapper {
-    @Mapping(source = "vehicle.vehicleId", target = "vehicleId")
-    @Mapping(source = "driver.driverId", target = "driverId")
+
     DriverVehicleHistoryResponse toResponse(DriverVehicleHistory driverVehicleHistory);
 }

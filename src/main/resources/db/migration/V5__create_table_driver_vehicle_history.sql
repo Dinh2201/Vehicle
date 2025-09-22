@@ -12,4 +12,3 @@ CREATE TABLE driver_vehicle_history (
 CREATE SEQUENCE driver_vehicle_history_history_id_seq START WITH 1 INCREMENT BY 1;
 
 
-

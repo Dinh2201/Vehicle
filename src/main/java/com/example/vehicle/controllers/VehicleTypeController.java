@@ -1,6 +1,6 @@
 package com.example.vehicle.controllers;
 
-import com.example.vehicle.dtos.request.VehicleType.VehicleTypeCreationRequest;
+import com.example.vehicle.dtos.request.vehicletype.VehicleTypeRequest;
 import com.example.vehicle.dtos.response.ApiResponse;
 import com.example.vehicle.dtos.response.vehicletype.VehicleTypeResponse;
 import com.example.vehicle.services.VehicleTypeService;
@@ -19,8 +19,8 @@ import java.util.List;
 public class VehicleTypeController {
      VehicleTypeService vehicleTypeService;
 
-    @PostMapping("/vehicletypes")
-    public ResponseEntity<ApiResponse<VehicleTypeResponse>>  createVehicleType(@RequestBody VehicleTypeCreationRequest request) {
+    @PostMapping("/vehicletype/create")
+    public ResponseEntity<ApiResponse<VehicleTypeResponse>>  createVehicleType(@RequestBody VehicleTypeRequest request) {
         ApiResponse<VehicleTypeResponse> apiResponse = new ApiResponse<>();
         apiResponse.setResult(vehicleTypeService.create(request));
         return ResponseEntity.ok(apiResponse);
@@ -41,7 +41,7 @@ public class VehicleTypeController {
     }
 
     @PutMapping("/vehicletype/update/{id}")
-    public ResponseEntity<ApiResponse<VehicleTypeResponse>> updateVehicleType(@PathVariable Long id, @RequestBody VehicleTypeCreationRequest request){
+    public ResponseEntity<ApiResponse<VehicleTypeResponse>> updateVehicleType(@PathVariable Long id, @RequestBody VehicleTypeRequest request){
         ApiResponse<VehicleTypeResponse> apiResponse = new ApiResponse<>();
         apiResponse.setResult(vehicleTypeService.updateVehicleType(id, request));
         return ResponseEntity.ok(apiResponse);

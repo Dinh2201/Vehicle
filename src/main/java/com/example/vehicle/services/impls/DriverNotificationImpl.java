@@ -1,0 +1,40 @@
+package com.example.vehicle.services.impls;
+
+import com.example.vehicle.entities.Driver;
+import com.example.vehicle.entities.DriverNotification;
+import com.example.vehicle.repositories.DriverNotificationRepository;
+import com.example.vehicle.repositories.DriverRepository;
+import com.example.vehicle.services.DriverNotificationService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class DriverNotificationImpl implements DriverNotificationService {
+    private final DriverNotificationRepository driverNotificationRepository;
+    private final DriverRepository driverRepository;
+
+    @Override
+    public void notifyDriver(Long driverId, String message) {
+        Driver driver = driverRepository.findById(driverId)
+                .orElseThrow(() -> new IllegalArgumentException("Driver not found with ID: " + driverId));
+
+        DriverNotification notification = new DriverNotification(
+                driver,
+                message,
+                LocalDateTime.now()
+        );
+
+        driverNotificationRepository.save(notification);
+    }
+
+    @Override
+    public List<DriverNotification> getDriverNotifications(Long id) {
+        return driverNotificationRepository.findAllByDriver_DriverId(id);
+    }
+}
