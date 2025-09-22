@@ -1,4 +1,4 @@
-package com.example.vehicle.dtos.request.Vehicle;
+package com.example.vehicle.dtos.request.vehicle;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -14,10 +14,10 @@ import java.time.LocalDate;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class VehicleCreationRequest {
-    @NotBlank(message = "Tên xe không được để trống")
+    @NotBlank(message = "{vehicle.name.notnull}")
      String vehicleName;
 
-    @NotBlank(message = "Biển số không được để trống")
+    @NotBlank(message = "{license.plate.notnull}")
      String licensePlate;
 
     @NotBlank(message = "Trạng thái không được để trống")
@@ -26,9 +26,9 @@ public class VehicleCreationRequest {
     @NotNull(message = "Ngày đăng ký không được để trống")
     LocalDate signupDate;
 
-      Double latitude;
+    Double latitude;
 
-      Double longitude;
+    Double longitude;
 
     @NotNull(message = "ID loại xe là bắt buộc")
      long vehicleType; // chứa ID

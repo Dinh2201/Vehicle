@@ -1,4 +1,4 @@
-package com.example.vehicle.dtos.request.VehicleType;
+package com.example.vehicle.dtos.response.bookinghistory;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,8 +8,10 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class VehicleTypeCreationRequest {
-     String name;
+public class VehicleSummary {
+    Long vehicleId;
 
-     String description;
+    String vehicleName;
+
+    String licensePlate;
 }

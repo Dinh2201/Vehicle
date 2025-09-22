@@ -1,7 +1,7 @@
 package com.example.vehicle.services;
 
-import com.example.vehicle.dtos.request.Vehicle.VehicleCreationRequest;
-import com.example.vehicle.dtos.request.Vehicle.VehicleUpdateRequest;
+import com.example.vehicle.dtos.request.vehicle.VehicleCreationRequest;
+import com.example.vehicle.dtos.request.vehicle.VehicleUpdateRequest;
 import com.example.vehicle.dtos.response.vehicle.VehicleResponse;
 
 import java.util.List;

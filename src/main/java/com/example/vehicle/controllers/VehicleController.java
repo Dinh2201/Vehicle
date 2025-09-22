@@ -1,7 +1,7 @@
 package com.example.vehicle.controllers;
 
-import com.example.vehicle.dtos.request.Vehicle.VehicleCreationRequest;
-import com.example.vehicle.dtos.request.Vehicle.VehicleUpdateRequest;
+import com.example.vehicle.dtos.request.vehicle.VehicleCreationRequest;
+import com.example.vehicle.dtos.request.vehicle.VehicleUpdateRequest;
 import com.example.vehicle.dtos.response.ApiResponse;
 import com.example.vehicle.dtos.response.vehicle.VehicleResponse;
 import com.example.vehicle.services.VehicleService;
@@ -22,7 +22,7 @@ public class VehicleController {
 
      VehicleService vehicleService;
 
-    @PostMapping("/vehicles")
+    @PostMapping("/vehicle/create")
     public ResponseEntity<ApiResponse<VehicleResponse>> createVehicle(@RequestBody @Valid VehicleCreationRequest request) {
             ApiResponse<VehicleResponse> apiResponse = new ApiResponse<>();
             apiResponse.setResult(vehicleService.createVehicle(request));

@@ -1,6 +1,6 @@
 package com.example.vehicle.services.impls;
 
-import com.example.vehicle.dtos.request.Driver.DriverCreationRequest;
+import com.example.vehicle.dtos.request.driver.DriverRequest;
 import com.example.vehicle.dtos.response.driver.DriverResponse;
 import com.example.vehicle.entities.BookingHistory;
 import com.example.vehicle.entities.Driver;
@@ -33,7 +33,7 @@ public class DriverServiceImpl implements DriverService {
 
 
     @Override
-    public DriverResponse createDriver (DriverCreationRequest request){
+    public DriverResponse createDriver (DriverRequest request){
         log.info("VehicleType start create ...");
 
         Driver driver = driverMapper.toRequest(request);
@@ -45,9 +45,9 @@ public class DriverServiceImpl implements DriverService {
     public List<DriverResponse> getAllDrivers() {
         log.info("VehicleType start get All Drivers ...");
         List<Driver> drivers = driverRepository.findAllByOrderByDriverIdAsc();
-        List<DriverResponse> responses = drivers.stream()
-                .map(driverMapper::toResponse)
-                .collect(Collectors.toList());
+
+        List<DriverResponse> responses = driverMapper.toListResponse(drivers);
+        log.info("VehicleType end get All Drivers ...");
         return responses;
     }
 
@@ -55,13 +55,13 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public DriverResponse getDriverById(Long id) {
         log.info("VehicleType start get Driver by id ...");
-        return driverMapper.toResponse(driverRepository.findById(id).orElseThrow(() -> new RuntimeException("Driver not found by id: " + id)));
+        return driverMapper.toResponse(driverRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.DRIVER_EXCEPTION)));
     }
 
     @Override
-    public DriverResponse updateDriver(Long id, DriverCreationRequest request) {
+    public DriverResponse updateDriver(Long id, DriverRequest request) {
         log.info("VehicleType start update driver ...");
-        Driver driver = driverRepository.findById(id).orElseThrow(() -> new RuntimeException("Driver not found by id: " + id));
+        Driver driver = driverRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.DRIVER_EXCEPTION));
         driverMapper.updateDriver(driver, request);
 
         Driver newDriver = driverRepository.save(driver);

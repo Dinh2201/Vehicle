@@ -1,5 +1,6 @@
 package com.example.vehicle.mappers;
 
+import com.example.vehicle.dtos.response.driver.DriverResponse;
 import com.example.vehicle.dtos.response.vehicle.DriverDTO;
 import com.example.vehicle.dtos.response.vehicle.VehicleResponse;
 import com.example.vehicle.dtos.response.vehicle.VehicleResponseNoVehicleType;
@@ -9,6 +10,7 @@ import com.example.vehicle.entities.VehicleType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
 import java.util.Set;
 
 @Mapper(componentModel = "spring")
@@ -18,6 +20,8 @@ public interface VehicleMapper {
     @Mapping(source = "vehicleType", target = "vehicleType")
     @Mapping(source = "driver", target = "driver")
     VehicleResponse toResponse(Vehicle vehicle);
+
+    List<VehicleResponse> toListResponse(List<Vehicle> driver);
 
     DriverDTO toDto(Driver driver);
 

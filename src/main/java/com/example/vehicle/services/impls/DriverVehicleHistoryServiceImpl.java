@@ -20,10 +20,9 @@ public class DriverVehicleHistoryServiceImpl implements DriverVehicleHistoryServ
     private final DriverVehicleHistoryMapper driverVehicleHistoryMapper;
 
     public List<DriverVehicleHistoryResponse> getAllHistory() {
-        List<DriverVehicleHistory> driverVehicleHistory = driverVehicleHistoryRepository.findAll();
-        List<DriverVehicleHistoryResponse> responses = driverVehicleHistory.stream()
+        List<DriverVehicleHistory> driverVehicleHistory = driverVehicleHistoryRepository.findAllByOrderByHistoryIdAsc();
+        return driverVehicleHistory.stream()
                 .map(driverVehicleHistoryMapper::toResponse)
                 .collect(Collectors.toList());
-        return responses;
     }
 }

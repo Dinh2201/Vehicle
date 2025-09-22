@@ -42,19 +42,20 @@ class DriverServiceImplTest {
 
         //Giả lập hành vi của mock
 
+        // Giả lập hành vi của mock
         when(driverRepository.findAllByOrderByDriverIdAsc()).thenReturn(driverEntity);
-        when(driverMapper.toResponse(driverEntity.get(0))).thenReturn(driverResponses.get(0));
-        when(driverMapper.toResponse(driverEntity.get(1))).thenReturn(driverResponses.get(1));
+        when(driverMapper.toListResponse(driverEntity)).thenReturn(driverResponses);
 
         // Gọi hàm và kiểm tra kết quả
         var result = driverServiceImpl.getAllDrivers();
 
         assertNotNull(result);
+        assertEquals(driverResponses.size(), result.size());
         assertEquals(driverResponses.get(0).getDriverId(), result.get(0).getDriverId());
 
         // Đảm bảo method mock được gọi đúng
         verify(driverRepository, times(1)).findAllByOrderByDriverIdAsc();
-
+        verify(driverMapper, times(1)).toListResponse(driverEntity);
     }
 
     private List<DriverResponse> buildDrivers() {

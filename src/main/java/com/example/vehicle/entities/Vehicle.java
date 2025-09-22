@@ -1,5 +1,6 @@
 package com.example.vehicle.entities;
 
+import com.example.vehicle.enums.VehicleStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -30,7 +31,8 @@ public class Vehicle {
     @Column(name = "license_plate", unique = true, nullable = false)
      String licensePlate;
 
-     String status;
+    @Enumerated(EnumType.STRING)
+    VehicleStatus status;
 
     @Column(name = "signup_date")
      LocalDateTime signupDate;
