@@ -1,5 +1,6 @@
 package com.example.vehicle.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -33,6 +34,7 @@ public class DriverVehicleHistory {
     Driver driver;
 
     @Column(name = "start_date")
+//    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     LocalDateTime startDate;
 
     @Column(name = "end_date")

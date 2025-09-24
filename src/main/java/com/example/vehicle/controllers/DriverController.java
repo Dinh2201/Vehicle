@@ -2,6 +2,7 @@ package com.example.vehicle.controllers;
 
 import com.example.vehicle.dtos.request.driver.DriverRequest;
 import com.example.vehicle.dtos.response.ApiResponse;
+import com.example.vehicle.dtos.response.DriverNotificationResponse;
 import com.example.vehicle.dtos.response.driver.DriverResponse;
 import com.example.vehicle.entities.DriverNotification;
 import com.example.vehicle.repositories.DriverNotificationRepository;
@@ -73,12 +74,12 @@ public class DriverController {
     }
 
     @GetMapping("/driver/{id}/notifications")
-    public ResponseEntity<List<DriverNotification>> getDriverNotifications(@PathVariable Long id) {
+    public ResponseEntity<List<DriverNotificationResponse>> getDriverNotifications(@PathVariable Long id) {
         if (!driverRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
 
-        List<DriverNotification> notifications = driverNotificationService.getDriverNotifications(id);
+        List<DriverNotificationResponse> notifications = driverNotificationService.getDriverNotifications(id);
         return ResponseEntity.ok(notifications);
     }
 

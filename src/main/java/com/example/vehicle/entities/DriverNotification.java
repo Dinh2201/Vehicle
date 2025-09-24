@@ -17,7 +17,8 @@ import java.time.LocalDateTime;
 public class DriverNotification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-     Long id;
+    @Column(name = "noty_id")
+     Long notyId;
 
     @ManyToOne
     @JoinColumn(name = "driver_id")
@@ -25,7 +26,7 @@ public class DriverNotification {
     Driver driver;
 
      String message;
-
+    @Column(name = "created_at")
      LocalDateTime createdAt = LocalDateTime.now();
 
     public DriverNotification(Driver driver, String message, LocalDateTime createdAt) {
