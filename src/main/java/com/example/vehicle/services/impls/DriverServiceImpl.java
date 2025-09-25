@@ -15,6 +15,7 @@ import com.example.vehicle.repositories.VehicleRepository;
 import com.example.vehicle.services.DriverService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -42,9 +43,9 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public List<DriverResponse> getAllDrivers() {
+    public List<DriverResponse> getAllDrivers(Pageable pageable) {
         log.info("VehicleType start get All Drivers ...");
-        List<Driver> drivers = driverRepository.findAllByOrderByDriverIdAsc();
+        List<Driver> drivers = driverRepository.findAll(pageable).getContent();
 
         List<DriverResponse> responses = driverMapper.toListResponse(drivers);
         log.info("VehicleType end get All Drivers ...");

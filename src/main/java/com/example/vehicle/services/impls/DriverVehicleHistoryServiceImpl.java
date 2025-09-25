@@ -7,10 +7,10 @@ import com.example.vehicle.repositories.DriverVehicleHistoryRepository;
 import com.example.vehicle.services.DriverVehicleHistoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,10 +19,12 @@ public class DriverVehicleHistoryServiceImpl implements DriverVehicleHistoryServ
     private final DriverVehicleHistoryRepository driverVehicleHistoryRepository;
     private final DriverVehicleHistoryMapper driverVehicleHistoryMapper;
 
-    public List<DriverVehicleHistoryResponse> getAllHistory() {
-        List<DriverVehicleHistory> driverVehicleHistory = driverVehicleHistoryRepository.findAllByOrderByHistoryIdAsc();
-        return driverVehicleHistory.stream()
-                .map(driverVehicleHistoryMapper::toResponse)
-                .collect(Collectors.toList());
+
+    public List<DriverVehicleHistoryResponse> getAllHistory(Pageable pageable) {
+        List<DriverVehicleHistory> driverVehicleHistory = driverVehicleHistoryRepository.findAll(pageable).getContent();
+
+        List<DriverVehicleHistoryResponse> responses = driverVehicleHistoryMapper.toResponses(driverVehicleHistory);
+        log.info("Driver vehicle history response");
+        return responses;
     }
 }

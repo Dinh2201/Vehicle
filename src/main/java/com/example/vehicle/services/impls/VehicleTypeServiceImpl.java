@@ -8,6 +8,7 @@ import com.example.vehicle.repositories.VehicleTypeRepository;
 import com.example.vehicle.services.VehicleTypeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,9 +33,9 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
     }
 
     @Override
-    public List<VehicleTypeResponse> getAllVehicleTypes() {
+    public List<VehicleTypeResponse> getAllVehicleTypes(Pageable pageable) {
         log.info("VehicleType start get All VehicleTypes ...");
-        List<VehicleType> vehicleTypes = vehicleTypeRepository.findAllByOrderByVehicleTypeIdAsc();
+        List<VehicleType> vehicleTypes = vehicleTypeRepository.findAll(pageable).getContent();
         List<VehicleTypeResponse> responses = vehicleTypeMapper.toListResponse(vehicleTypes);
         log.info("VehicleType get All VehicleTypes ...");
         return responses;

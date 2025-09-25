@@ -12,6 +12,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -39,22 +43,24 @@ class DriverServiceImplTest {
         // prepare data
         var driverEntity = buildDriverEntities();
         var driverResponses = buildDrivers();
+        Pageable pageable = PageRequest.of(0, 10);
 
-        //Giả lập hành vi của mock
+        // giả lập Page<Driver>
+        Page<Driver> driverPage = new PageImpl<>(driverEntity, pageable, driverEntity.size());
 
         // Giả lập hành vi của mock
-        when(driverRepository.findAllByOrderByDriverIdAsc()).thenReturn(driverEntity);
+        when(driverRepository.findAll(pageable)).thenReturn(driverPage);
         when(driverMapper.toListResponse(driverEntity)).thenReturn(driverResponses);
 
         // Gọi hàm và kiểm tra kết quả
-        var result = driverServiceImpl.getAllDrivers();
+        var result = driverServiceImpl.getAllDrivers(pageable);
 
         assertNotNull(result);
         assertEquals(driverResponses.size(), result.size());
         assertEquals(driverResponses.get(0).getDriverId(), result.get(0).getDriverId());
 
         // Đảm bảo method mock được gọi đúng
-        verify(driverRepository, times(1)).findAllByOrderByDriverIdAsc();
+        verify(driverRepository, times(1)).findAll(pageable);
         verify(driverMapper, times(1)).toListResponse(driverEntity);
     }
 

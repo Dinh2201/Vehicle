@@ -7,6 +7,7 @@ import com.example.vehicle.repositories.BookingHistoryRepository;
 import com.example.vehicle.services.BookingHistoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,8 +22,8 @@ public class BookingHistoryImpl implements BookingHistoryService {
     private final BookingHistoryMapper bookingHistoryMapper;
 
     @Override
-    public List<BookingHistoryResponse> getAllBookingHistory() {
-        List<BookingHistory> bookingHistoryList = bookingHistoryRepository.findAllByOrderByBookingIdAsc();
+    public List<BookingHistoryResponse> getAllBookingHistory(Pageable pageable) {
+        List<BookingHistory> bookingHistoryList = bookingHistoryRepository.findAll(pageable).getContent();
 
         List<BookingHistoryResponse> responses = bookingHistoryMapper.toBookingHistoryResponses(bookingHistoryList);
         log.info("Booking history get all list");

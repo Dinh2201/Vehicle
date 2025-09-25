@@ -9,6 +9,8 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,9 +32,20 @@ public class VehicleController {
     }
 
     @GetMapping("/vehicles")
-    public ResponseEntity<ApiResponse<List<VehicleResponse>> > getAllVehicles() {
+    public ResponseEntity<ApiResponse<List<VehicleResponse>> > getAllVehicles(
+            @RequestParam(required = false, defaultValue = "1") int pageNo,
+            @RequestParam(required = false, defaultValue = "5") int pageSize,
+            @RequestParam(required = false, defaultValue = "vehicleId") String sortBy,
+            @RequestParam(required = false, defaultValue = "ASC") String sortDir
+    ) {
+        Sort sort = null;
+        if(sortDir.equalsIgnoreCase("ASC")){
+            sort = Sort.by(sortBy).ascending();
+        } else {
+            sort = Sort.by(sortBy).descending();
+        }
         ApiResponse<List<VehicleResponse>> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(vehicleService.getAllVehicles());
+        apiResponse.setResult(vehicleService.getAllVehicles(PageRequest.of(pageNo-1, pageSize, sort)));
         return ResponseEntity.ok(apiResponse);
    }
 

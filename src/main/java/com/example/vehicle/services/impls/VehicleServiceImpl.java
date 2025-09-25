@@ -18,6 +18,7 @@ import com.example.vehicle.repositories.VehicleTypeRepository;
 import com.example.vehicle.services.VehicleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -97,9 +98,9 @@ public class VehicleServiceImpl implements VehicleService {
 
 
     @Override
-    public List<VehicleResponse> getAllVehicles() {
+    public List<VehicleResponse> getAllVehicles(Pageable pageable) {
         log.info("Start get all vehicle ...");
-        List<Vehicle> vehicles = vehicleRepository.findAllByOrderByVehicleIdAsc();
+        List<Vehicle> vehicles = vehicleRepository.findAll(pageable).getContent();
 
         List<VehicleResponse> responses = vehicleMapper.toListResponse(vehicles);
         log.info("Vehicles get all successfully");

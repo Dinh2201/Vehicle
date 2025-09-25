@@ -15,5 +15,4 @@ public interface DriverVehicleHistoryRepository extends JpaRepository<DriverVehi
 
     Optional<DriverVehicleHistory> findByDriver(Driver driver);
 
-    List<DriverVehicleHistory> findAllByOrderByHistoryIdAsc();
 }
