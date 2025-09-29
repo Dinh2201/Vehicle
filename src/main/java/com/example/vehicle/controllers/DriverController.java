@@ -104,7 +104,7 @@ public class DriverController {
         } else {
             apiResponse.setMessage("Invalid booking action");
         }
-
+        apiResponse.setResult(driverService.acceptBooking(driverId, action));
         return ResponseEntity.ok(apiResponse);
     }
 
