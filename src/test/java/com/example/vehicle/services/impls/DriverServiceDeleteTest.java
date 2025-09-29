@@ -2,6 +2,8 @@ package com.example.vehicle.services.impls;
 
 import com.example.vehicle.entities.Driver;
 import com.example.vehicle.entities.Vehicle;
+import com.example.vehicle.enums.ErrorCode;
+import com.example.vehicle.exceptions.AppException;
 import com.example.vehicle.mappers.DriverMapper;
 import com.example.vehicle.repositories.BookingHistoryRepository;
 import com.example.vehicle.repositories.DriverRepository;
@@ -46,11 +48,11 @@ class DriverServiceDeleteTest {
         when(driverRepository.findAllById(ids)).thenReturn(drivers.subList(0,2)); // Chỉ trả về driver 1 và 2
 
         // Kiểm tra nếu exception được ném ra khi số lượng không khớp
-        Exception exception = assertThrows(RuntimeException.class, () -> {
+        AppException exception = assertThrows(AppException.class, () -> {
             driverServiceImpl.deleteDriver(ids);
         });
 
-        assertEquals("Some drivers do not exist", exception.getMessage());
+        assertEquals(ErrorCode.DRIVERS_NOT_FOUND, exception.getErrorCode());
     }
 
     @Test
