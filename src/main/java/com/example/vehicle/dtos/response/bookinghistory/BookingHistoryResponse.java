@@ -1,5 +1,6 @@
 package com.example.vehicle.dtos.response.bookinghistory;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -20,6 +21,7 @@ public class BookingHistoryResponse {
 
      VehicleSummary vehicle;
 
+     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
      LocalDateTime updatedAt;
 
 }

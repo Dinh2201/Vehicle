@@ -20,19 +20,19 @@ public class VehicleCreationRequest {
     @NotBlank(message = "{license.plate.notnull}")
      String licensePlate;
 
-    @NotBlank(message = "Trạng thái không được để trống")
+    @NotBlank(message = "{status.notnull}")
      String status;
 
-    @NotNull(message = "Ngày đăng ký không được để trống")
+    @NotNull(message = "{signup.date.notnull}")
     LocalDate signupDate;
 
     Double latitude;
 
     Double longitude;
 
-    @NotNull(message = "ID loại xe là bắt buộc")
+    @NotNull(message = "{vehicle.type.notnull}")
      long vehicleType; // chứa ID
 
-    @NotNull(message = "ID tài xế không được rỗng")
+    @NotNull(message = "{driver.notnull}")
      long driver;
 }

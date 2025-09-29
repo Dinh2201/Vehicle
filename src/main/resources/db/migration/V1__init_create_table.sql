@@ -1,14 +1,14 @@
-CREATE TABLE vehicle_type (
+CREATE TABLE IF NOT EXISTS vehicle_type (
     vehicle_type_id BIGINT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT
 );
 
 -- -- Tạo Sequence cho VehicleType
-CREATE SEQUENCE vehicle_type_vehicle_type_id_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE IF NOT EXISTS vehicle_type_vehicle_type_id_seq START WITH 1 INCREMENT BY 1;
 
 -- Tạo bảng Driver
-CREATE TABLE driver (
+CREATE TABLE IF NOT EXISTS driver (
     driver_id BIGINT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     age VARCHAR(10),
@@ -22,10 +22,10 @@ CREATE TABLE driver (
 );
 
 -- -- Tạo Sequence cho Driver
-CREATE SEQUENCE driver_driver_id_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE IF NOT EXISTS driver_driver_id_seq START WITH 1 INCREMENT BY 1;
 
 -- Tạo bảng Vehicle
-CREATE TABLE vehicle (
+CREATE TABLE IF NOT EXISTS vehicle (
     vehicle_id BIGINT PRIMARY KEY,
     vehicle_name VARCHAR(255) NOT NULL,
     license_plate VARCHAR(50) UNIQUE NOT NULL,
@@ -40,8 +40,7 @@ CREATE TABLE vehicle (
 );
 
 
-
 -- -- Tạo Sequence cho Vehicle
-CREATE SEQUENCE vehicle_vehicle_id_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE IF NOT EXISTS vehicle_vehicle_id_seq START WITH 1 INCREMENT BY 1;
 
 
