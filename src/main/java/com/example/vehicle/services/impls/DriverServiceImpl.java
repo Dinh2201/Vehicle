@@ -6,8 +6,8 @@ import com.example.vehicle.entities.BookingHistory;
 import com.example.vehicle.entities.Driver;
 import com.example.vehicle.entities.Vehicle;
 import com.example.vehicle.enums.BookingAction;
+import com.example.vehicle.enums.ErrorCode;
 import com.example.vehicle.exceptions.AppException;
-import com.example.vehicle.exceptions.ErrorCode;
 import com.example.vehicle.mappers.DriverMapper;
 import com.example.vehicle.repositories.BookingHistoryRepository;
 import com.example.vehicle.repositories.DriverRepository;
@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -79,7 +78,7 @@ public class DriverServiceImpl implements DriverService {
         List<Driver> drivers = driverRepository.findAllById(ids);
 
         if( drivers.size() != ids.size() ){
-            throw new RuntimeException("Some drivers do not exist");
+            throw new AppException(ErrorCode.DRIVERS_NOT_FOUND);
         }
 
         // Gỡ liên kết driver khỏi tất cả vehicle tương ứng

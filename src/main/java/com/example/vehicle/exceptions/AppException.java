@@ -1,16 +1,12 @@
 package com.example.vehicle.exceptions;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.example.vehicle.enums.ErrorCode;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
 public class AppException extends RuntimeException {
-    public AppException(ErrorCode errorCode) {
-        super(errorCode.getMessage());
-        this.errorCode = errorCode;
-    }
 
-    private ErrorCode errorCode;
-
+    private final ErrorCode errorCode;
 }

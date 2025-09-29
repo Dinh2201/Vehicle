@@ -13,6 +13,4 @@ import java.util.Optional;
 public interface DriverVehicleHistoryRepository extends JpaRepository<DriverVehicleHistory, Long> {
     DriverVehicleHistory findTopByDriverAndVehicleAndEndDateIsNull(Driver driver, Vehicle vehicle);
 
-    Optional<DriverVehicleHistory> findByDriver(Driver driver);
-
 }

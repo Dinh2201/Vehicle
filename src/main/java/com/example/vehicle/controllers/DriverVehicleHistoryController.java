@@ -2,6 +2,7 @@ package com.example.vehicle.controllers;
 
 import com.example.vehicle.dtos.response.ApiResponse;
 import com.example.vehicle.dtos.response.DriverVehicleHistoryResponse;
+import com.example.vehicle.enums.SuccessCode;
 import com.example.vehicle.services.DriverVehicleHistoryService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,7 @@ public class DriverVehicleHistoryController {
             sort = Sort.by(sortBy).descending();
         }
         ApiResponse<List<DriverVehicleHistoryResponse>> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(SuccessCode.DRIVER_VEHICLE_HISTORY.getCode());
         apiResponse.setResult(driverVehicleHistoryService.getAllHistory(PageRequest.of(pageNo-1,pageSize, sort)));
         return ResponseEntity.ok(apiResponse);
     }

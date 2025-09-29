@@ -1,14 +1,16 @@
 package com.example.vehicle.controllers;
 
+import com.example.vehicle.configs.Translator;
 import com.example.vehicle.dtos.request.driver.DriverRequest;
 import com.example.vehicle.dtos.response.ApiResponse;
 import com.example.vehicle.dtos.response.DriverNotificationResponse;
 import com.example.vehicle.dtos.response.driver.DriverResponse;
-import com.example.vehicle.entities.DriverNotification;
+import com.example.vehicle.enums.SuccessCode;
 import com.example.vehicle.repositories.DriverNotificationRepository;
 import com.example.vehicle.repositories.DriverRepository;
 import com.example.vehicle.services.DriverNotificationService;
 import com.example.vehicle.services.DriverService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -32,8 +34,9 @@ public class DriverController {
 
 
     @PostMapping("/driver/create")
-    public ResponseEntity<ApiResponse<DriverResponse>> createDriver (@RequestBody DriverRequest request){
+    public ResponseEntity<ApiResponse<DriverResponse>> createDriver (@RequestBody @Valid DriverRequest request){
         ApiResponse<DriverResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(SuccessCode.DRIVER_CREATE.getCode());
         apiResponse.setResult(driverService.createDriver(request));
         return ResponseEntity.ok(apiResponse);
     }
@@ -52,6 +55,7 @@ public class DriverController {
         }
 
         ApiResponse<List<DriverResponse>> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(SuccessCode.DRIVER_GET_ALL.getCode());
         apiResponse.setResult(driverService.getAllDrivers(PageRequest.of(pageNo-1,pageSize, sort)));
         return ResponseEntity.ok(apiResponse);
     }
@@ -59,6 +63,7 @@ public class DriverController {
     @GetMapping("/driver/{id}")
     public ResponseEntity<ApiResponse<DriverResponse>> getDriverById(@PathVariable Long id){
         ApiResponse<DriverResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(SuccessCode.DRIVER_GET_BY_ID.getCode());
         apiResponse.setResult(driverService.getDriverById(id));
         return ResponseEntity.ok(apiResponse);
     }
@@ -66,6 +71,7 @@ public class DriverController {
     @PutMapping("/driver/update/{id}")
     public ResponseEntity<ApiResponse<DriverResponse>> updateDriver(@PathVariable Long id, @RequestBody DriverRequest request){
         ApiResponse<DriverResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(SuccessCode.DRIVER_UPDATE.getCode());
         apiResponse.setResult(driverService.updateDriver(id, request));
         return ResponseEntity.ok(apiResponse);
     }
@@ -73,6 +79,8 @@ public class DriverController {
     @DeleteMapping("/driver/delete")
     public ResponseEntity<ApiResponse<Boolean>> deleteDriver(@RequestBody List<Long> ids){
         ApiResponse<Boolean> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(SuccessCode.DRIVER_DELETED.getCode());
+        apiResponse.setMessage(Translator.toLocale(SuccessCode.DRIVER_DELETED.getCode()));
         apiResponse.setResult(driverService.deleteDriver(ids));
         return ResponseEntity.ok(apiResponse);
 
@@ -82,18 +90,35 @@ public class DriverController {
     @PutMapping("/driver/{driverId}/accept")
     public ResponseEntity<ApiResponse<Boolean>> isAcceptBooking(@PathVariable Long driverId, @RequestParam("action") String action) {
         ApiResponse<Boolean> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(driverService.acceptBooking(driverId, action));
+        boolean result = driverService.acceptBooking(driverId, action);
+
+        if (result && action.equalsIgnoreCase("ACCEPT")) {
+            apiResponse.setCode(SuccessCode.DRIVER_ACCEPT.getCode());
+            apiResponse.setMessage(Translator.toLocale(SuccessCode.DRIVER_ACCEPT.getCode()));
+        } else if (!result && action.equalsIgnoreCase("REJECT")) {
+            apiResponse.setCode(SuccessCode.DRIVER_REJECT.getCode());
+            apiResponse.setMessage(Translator.toLocale(SuccessCode.DRIVER_REJECT.getCode()));
+        } else if (!result && action.equalsIgnoreCase("CANCEL")) {
+            apiResponse.setCode(SuccessCode.DRIVER_CANCEL.getCode());
+            apiResponse.setMessage(Translator.toLocale(SuccessCode.DRIVER_CANCEL.getCode()));
+        } else {
+            apiResponse.setMessage("Invalid booking action");
+        }
+
         return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping("/driver/{id}/notifications")
-    public ResponseEntity<List<DriverNotificationResponse>> getDriverNotifications(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<List<DriverNotificationResponse>>> getDriverNotifications(@PathVariable Long id) {
+        ApiResponse<List<DriverNotificationResponse>> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(SuccessCode.DRIVER_NOTIFY.getCode());
         if (!driverRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
 
         List<DriverNotificationResponse> notifications = driverNotificationService.getDriverNotifications(id);
-        return ResponseEntity.ok(notifications);
+        apiResponse.setResult(notifications);
+        return ResponseEntity.ok(apiResponse);
     }
 
 }

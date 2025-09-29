@@ -2,6 +2,7 @@ package com.example.vehicle.controllers;
 
 import com.example.vehicle.dtos.response.ApiResponse;
 import com.example.vehicle.dtos.response.bookinghistory.BookingHistoryResponse;
+import com.example.vehicle.enums.SuccessCode;
 import com.example.vehicle.services.BookingHistoryService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,7 @@ public class BookingHistoryController {
             sort = Sort.by(sortBy).descending();
         }
         ApiResponse<List<BookingHistoryResponse>> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(SuccessCode.BOOKING_HISTORY.getCode());
         apiResponse.setResult(bookingHistoryService.getAllBookingHistory(PageRequest.of(pageNo-1,pageSize, sort)));
         return ResponseEntity.ok(apiResponse);
     }

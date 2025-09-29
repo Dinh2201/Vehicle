@@ -1,9 +1,11 @@
 package com.example.vehicle.controllers;
 
+import com.example.vehicle.configs.Translator;
 import com.example.vehicle.dtos.request.vehicle.VehicleCreationRequest;
 import com.example.vehicle.dtos.request.vehicle.VehicleUpdateRequest;
 import com.example.vehicle.dtos.response.ApiResponse;
 import com.example.vehicle.dtos.response.vehicle.VehicleResponse;
+import com.example.vehicle.enums.SuccessCode;
 import com.example.vehicle.services.VehicleService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -27,6 +29,8 @@ public class VehicleController {
     @PostMapping("/vehicle/create")
     public ResponseEntity<ApiResponse<VehicleResponse>> createVehicle(@RequestBody @Valid VehicleCreationRequest request) {
             ApiResponse<VehicleResponse> apiResponse = new ApiResponse<>();
+            apiResponse.setCode(SuccessCode.VEHICLE_CREATE.getCode());
+            apiResponse.setMessage(Translator.toLocale(SuccessCode.VEHICLE_CREATE.getCode()));
             apiResponse.setResult(vehicleService.createVehicle(request));
             return ResponseEntity.ok(apiResponse);
     }
@@ -45,6 +49,7 @@ public class VehicleController {
             sort = Sort.by(sortBy).descending();
         }
         ApiResponse<List<VehicleResponse>> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(SuccessCode.VEHICLE_GET_ALL.getCode());
         apiResponse.setResult(vehicleService.getAllVehicles(PageRequest.of(pageNo-1, pageSize, sort)));
         return ResponseEntity.ok(apiResponse);
    }
@@ -52,6 +57,7 @@ public class VehicleController {
     @GetMapping("/vehicle/{id}")
     public ResponseEntity<ApiResponse<VehicleResponse>> getVehicleById(@PathVariable Long id) {
         ApiResponse<VehicleResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(SuccessCode.VEHICLE_GET_BY_ID.getCode());
         apiResponse.setResult(vehicleService.getVehicleById(id));
         return ResponseEntity.ok(apiResponse);
    }
@@ -59,6 +65,7 @@ public class VehicleController {
    @PutMapping("/vehicle/update/{id}")
     public ResponseEntity<ApiResponse<VehicleResponse>> updateVehicle(@PathVariable Long id, @RequestBody VehicleUpdateRequest request) {
         ApiResponse<VehicleResponse> apiResponse = new ApiResponse<>();
+       apiResponse.setCode(SuccessCode.VEHICLE_UPDATE.getCode());
         apiResponse.setResult(vehicleService.updateVehicle(id, request));
         return ResponseEntity.ok(apiResponse);
    }
@@ -66,6 +73,8 @@ public class VehicleController {
    @DeleteMapping("/vehicle/delete")
     public ResponseEntity<ApiResponse<Boolean>> deleteVehicle(@RequestBody List<Long> ids) {
         ApiResponse<Boolean> apiResponse = new ApiResponse<>();
+       apiResponse.setCode(SuccessCode.VEHICLE_DELETE.getCode());
+       apiResponse.setMessage(Translator.toLocale(SuccessCode.VEHICLE_DELETE.getCode()));
         apiResponse.setResult(vehicleService.deleteVehicle(ids));
         return ResponseEntity.ok(apiResponse);
    }

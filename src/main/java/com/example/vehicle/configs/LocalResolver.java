@@ -2,6 +2,7 @@ package com.example.vehicle.configs;
 
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -14,10 +15,12 @@ import java.util.List;
 import java.util.Locale;
 
 @Configuration
+@Slf4j
 public class LocalResolver extends AcceptHeaderLocaleResolver implements WebMvcConfigurer {
 
     @Override
     public Locale resolveLocale(HttpServletRequest request) {
+
         String languageHeader = request.getHeader("Accept-Language");
         return StringUtils.hasLength(languageHeader) ? Locale.lookup(Locale.LanguageRange.parse(languageHeader),
                 List.of(new Locale("en"), new Locale("vi"))) : Locale.getDefault();

@@ -9,7 +9,7 @@ import com.example.vehicle.entities.Vehicle;
 import com.example.vehicle.entities.VehicleType;
 import com.example.vehicle.enums.VehicleStatus;
 import com.example.vehicle.exceptions.AppException;
-import com.example.vehicle.exceptions.ErrorCode;
+import com.example.vehicle.enums.ErrorCode;
 import com.example.vehicle.mappers.VehicleMapper;
 import com.example.vehicle.repositories.DriverRepository;
 import com.example.vehicle.repositories.DriverVehicleHistoryRepository;
@@ -185,7 +185,7 @@ public class VehicleServiceImpl implements VehicleService {
 
         log.info("So sánh số lượng");
         if (vehicles.size() != ids.size()) {
-            throw new RuntimeException("Some vehicle IDs do not exist.");
+            throw new AppException(ErrorCode.VEHICLES_NOT_FOUND);
         }
 
         vehicleRepository.deleteAll(vehicles);

@@ -11,6 +11,5 @@ import java.util.Optional;
 
 @Repository
 public interface BookingHistoryRepository extends JpaRepository<BookingHistory, Long> {
-    Optional<BookingHistory> findByDriver(Driver driver);
 
 }

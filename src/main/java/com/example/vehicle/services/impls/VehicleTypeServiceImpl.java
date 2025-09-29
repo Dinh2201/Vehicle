@@ -3,6 +3,8 @@ package com.example.vehicle.services.impls;
 import com.example.vehicle.dtos.request.vehicletype.VehicleTypeRequest;
 import com.example.vehicle.dtos.response.vehicletype.VehicleTypeResponse;
 import com.example.vehicle.entities.VehicleType;
+import com.example.vehicle.enums.ErrorCode;
+import com.example.vehicle.exceptions.AppException;
 import com.example.vehicle.mappers.VehicleTypeMapper;
 import com.example.vehicle.repositories.VehicleTypeRepository;
 import com.example.vehicle.services.VehicleTypeService;
@@ -46,18 +48,19 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
     public VehicleTypeResponse getVehicleTypeById(Long id) {
         log.info("VehicleType start get VehicleType by id ...");
 
-        return vehicleTypeMapper.toResponse(vehicleTypeRepository.findById(id).orElseThrow(() -> new RuntimeException("VehicleType not found with id " + id)));
+        return vehicleTypeMapper.toResponse(vehicleTypeRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.VEHICLE_TYPE_EXCEPTION)));
     }
 
     @Override
     public VehicleTypeResponse updateVehicleType(Long id, VehicleTypeRequest request) {
 
         log.info("VehicleType start update VehicleType by id ...");
-        VehicleType vehicleType = vehicleTypeRepository.findById(id).orElseThrow(() -> new RuntimeException("VehicleType not found with id " + id));
+        VehicleType vehicleType = vehicleTypeRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.VEHICLE_TYPE_EXCEPTION));
 
         vehicleTypeMapper.updateVehicleType(vehicleType, request);
         VehicleType newVehicleType = vehicleTypeRepository.save(vehicleType);
         VehicleTypeResponse response = vehicleTypeMapper.toResponse(newVehicleType);
+        log.info("VehicleType update VehicleType by id ...");
         return response;
     }
 
@@ -71,7 +74,7 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
         List<VehicleType> vehicleTypes = vehicleTypeRepository.findAllById(ids);
 
         if( vehicleTypes.size() != ids.size() ){
-            throw new RuntimeException("Some vehicle types do not exist");
+            throw new AppException(ErrorCode.VEHICLE_TYPES_NOT_FOUND);
         }
         vehicleTypeRepository.deleteAll(vehicleTypes);
         return true;
