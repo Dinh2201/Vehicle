@@ -9,5 +9,4 @@ import java.util.List;
 public interface DriverNotificationService {
 
     void notifyDriver(Long driverId, String message);
-    List<DriverNotificationResponse> getDriverNotifications(Long id);
 }

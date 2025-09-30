@@ -30,22 +30,9 @@ public class DriverNotificationImpl implements DriverNotificationService {
         Driver driver = driverRepository.findById(driverId)
                 .orElseThrow(() -> new AppException(ErrorCode.DRIVER_EXCEPTION));
 
-        DriverNotification notification = new DriverNotification(
-                driver,
-                message,
-                LocalDateTime.now()
-        );
+        log.info(">>> Gửi thông báo đến driver {}: {}", driver.getDriverId(), message);
 
-        driverNotificationRepository.save(notification);
     }
 
-    @Override
-    public List<DriverNotificationResponse> getDriverNotifications(Long id) {
-        log.info("Get DriverNotifications");
 
-        List<DriverNotification> notifications = driverNotificationRepository.findAllByDriver_DriverId(id);
-        List<DriverNotificationResponse> responses = driverNotificationMapper.toResponseList(notifications);
-        log.info("Get DriverNotifications by driver");
-        return responses;
-    }
 }

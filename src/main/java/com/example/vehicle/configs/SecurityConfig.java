@@ -56,8 +56,6 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers("/api/v1/driver/*/accept")
                                         .permitAll()
-                                        .requestMatchers("/api/v1/driver/*/notifications")
-                                        .permitAll()
 
 //                                        Vehicle Type
                                         .requestMatchers("/api/v1/vehicletypes")

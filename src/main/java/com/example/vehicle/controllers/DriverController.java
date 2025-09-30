@@ -30,7 +30,7 @@ public class DriverController {
     DriverService driverService;
     DriverNotificationRepository driverNotificationRepository;
     DriverNotificationService driverNotificationService;
-    private final DriverRepository driverRepository;
+    DriverRepository driverRepository;
 
 
     @PostMapping("/driver/create")
@@ -87,7 +87,7 @@ public class DriverController {
     }
 
     // Endpoint để chấp nhận tài xế
-    @PutMapping("/driver/{driverId}/accept")
+    @PutMapping("/driver/{driverId}/")
     public ResponseEntity<ApiResponse<Boolean>> isAcceptBooking(@PathVariable Long driverId, @RequestParam("action") String action) {
         ApiResponse<Boolean> apiResponse = new ApiResponse<>();
         boolean result = driverService.acceptBooking(driverId, action);
@@ -108,17 +108,5 @@ public class DriverController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    @GetMapping("/driver/{id}/notifications")
-    public ResponseEntity<ApiResponse<List<DriverNotificationResponse>>> getDriverNotifications(@PathVariable Long id) {
-        ApiResponse<List<DriverNotificationResponse>> apiResponse = new ApiResponse<>();
-        apiResponse.setCode(SuccessCode.DRIVER_NOTIFY.getCode());
-        if (!driverRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-
-        List<DriverNotificationResponse> notifications = driverNotificationService.getDriverNotifications(id);
-        apiResponse.setResult(notifications);
-        return ResponseEntity.ok(apiResponse);
-    }
 
 }

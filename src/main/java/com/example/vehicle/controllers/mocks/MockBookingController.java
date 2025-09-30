@@ -22,12 +22,13 @@ public class MockBookingController {
 
     @PostMapping("/{bookingId}/cancel")
     public ResponseEntity<Map<String, Object>> cancel(@PathVariable Long bookingId) {
-        Long mockDriverId = 1L; // sau này sẽ lấy từ booking thực
+        Long mockDriverId = 4L; // sau này sẽ lấy từ booking thực
         driverNotificationService.notifyDriver(mockDriverId, "Booking " + bookingId + " đã bị hủy bởi người dùng.");
         return ResponseEntity.ok(Map.of(
                 "bookingId", bookingId,
                 "status", "CANCELED",
-                "message", "Booking đã bị hủy bởi người dùng."
+                "notifyToDriver", mockDriverId,
+                "notificationMessage", "Booking " + bookingId + " đã bị hủy bởi người dùng."
         ));
     }
 }
