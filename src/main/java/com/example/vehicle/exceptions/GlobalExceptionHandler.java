@@ -26,7 +26,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleException(Exception exception) {
         ApiResponse<Void> response = new ApiResponse<>();
-        response.setCode("E999");                 // luôn cố định E999
+        log.info("luôn cố định E999");
+        response.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
         response.setMessage(exception.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
@@ -54,7 +55,7 @@ public class GlobalExceptionHandler {
 
         Map<String, String> errors = new HashMap<>();
         exception.getBindingResult().getFieldErrors().forEach(error -> {
-            // message mặc định từ annotation có thể là key
+            log.info("message mặc định từ annotation có thể là key");
             String localizedMessage = messageSource.getMessage(error, locale);
             errors.put(error.getField(), localizedMessage);
         });
@@ -64,7 +65,6 @@ public class GlobalExceptionHandler {
         apiResponse.setCode(ErrorCode.VALIDATION.getCode());
         apiResponse.setMessage(errors.values().iterator().next());
 
-//        apiResponse.setResult(errors);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
     }
 

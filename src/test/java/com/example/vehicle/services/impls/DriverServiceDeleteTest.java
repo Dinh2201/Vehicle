@@ -1,5 +1,7 @@
 package com.example.vehicle.services.impls;
 
+import com.example.vehicle.configs.Translator;
+import com.example.vehicle.dtos.response.ApiResponse;
 import com.example.vehicle.entities.Driver;
 import com.example.vehicle.entities.Vehicle;
 import com.example.vehicle.enums.ErrorCode;
@@ -14,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.support.ResourceBundleMessageSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +58,15 @@ class DriverServiceDeleteTest {
         assertEquals(ErrorCode.DRIVERS_NOT_FOUND, exception.getErrorCode());
     }
 
+    @BeforeEach
+    void setupTranslator() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasename("i18n/messages"); // basename của messages.properties trong `src/main/resources`
+        messageSource.setDefaultEncoding("UTF-8");
+
+        Translator.messageSource = messageSource;
+    }
+
     @Test
     void deleteDriver_whenAllDriversExist_shouldDeleteDrivers() {
         // Test trường hợp tất cả drivers đều tồn tại và sẽ bị xóa.
@@ -67,10 +79,10 @@ class DriverServiceDeleteTest {
         when(driverRepository.findAllById(ids)).thenReturn(drivers);
 
         // Gọi phương thức delete
-        boolean result = driverServiceImpl.deleteDriver(ids);
+        ApiResponse<Boolean> result = driverServiceImpl.deleteDriver(ids);
 
         // Kiểm tra các phương thức đã được gọi đúng cách
-        assertTrue(result, "The method should return true when drivers are deleted.");
+        assertTrue(result.getData(), "The method should return true when drivers are deleted.");
 
         // Kiểm tra xem vehicle đã được cập nhật đúng chưa (liên kết driver - vehicle đã bị xóa)
         verify(vehicleRepository, times(1)).save(drivers.get(0).getVehicle()); // Save vehicle1

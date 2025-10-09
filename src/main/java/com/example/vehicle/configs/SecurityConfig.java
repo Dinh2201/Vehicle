@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -54,7 +53,7 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers("/api/v1/driver/delete")
                                         .permitAll()
-                                        .requestMatchers("/api/v1/driver/*/accept")
+                                        .requestMatchers("/api/v1/driver/*")
                                         .permitAll()
 
 //                                        Vehicle Type
@@ -74,9 +73,10 @@ public class SecurityConfig {
                                         .permitAll()
 
                                         // Mock
-                                        .requestMatchers("/api/v1/bookings/*/accept").permitAll()
-                                        .requestMatchers("/api/v1/bookings/*/reject").permitAll()
                                         .requestMatchers("/api/v1/bookings/*/cancel").permitAll()
+                                        .requestMatchers("/api/v2/driver/*")
+                                        .permitAll()
+
 
                                         .anyRequest()
                                         .authenticated())

@@ -2,13 +2,10 @@ package com.example.vehicle.controllers;
 
 import com.example.vehicle.dtos.response.ApiResponse;
 import com.example.vehicle.dtos.response.DriverVehicleHistoryResponse;
-import com.example.vehicle.enums.SuccessCode;
 import com.example.vehicle.services.DriverVehicleHistoryService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,15 +29,6 @@ public class DriverVehicleHistoryController {
             @RequestParam(required = false, defaultValue = "historyId") String sortBy,
             @RequestParam(required = false, defaultValue = "ASC") String sortDir
     ) {
-        Sort sort = null;
-        if(sortDir.equalsIgnoreCase("ASC")){
-            sort = Sort.by(sortBy).ascending();
-        } else {
-            sort = Sort.by(sortBy).descending();
-        }
-        ApiResponse<List<DriverVehicleHistoryResponse>> apiResponse = new ApiResponse<>();
-        apiResponse.setCode(SuccessCode.DRIVER_VEHICLE_HISTORY.getCode());
-        apiResponse.setResult(driverVehicleHistoryService.getAllHistory(PageRequest.of(pageNo-1,pageSize, sort)));
-        return ResponseEntity.ok(apiResponse);
+        return ResponseEntity.ok(driverVehicleHistoryService.getAllHistory(pageNo , pageSize, sortBy,sortDir));
     }
 }

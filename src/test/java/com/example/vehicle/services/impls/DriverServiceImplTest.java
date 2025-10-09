@@ -1,25 +1,32 @@
 package com.example.vehicle.services.impls;
 
+import com.example.vehicle.configs.Translator;
+import com.example.vehicle.dtos.response.ApiResponse;
 import com.example.vehicle.dtos.response.driver.DriverResponse;
+import com.example.vehicle.entities.BookingHistory;
 import com.example.vehicle.entities.Driver;
+import com.example.vehicle.entities.Vehicle;
 import com.example.vehicle.enums.DriverStatus;
+import com.example.vehicle.enums.ErrorCode;
+import com.example.vehicle.exceptions.AppException;
 import com.example.vehicle.mappers.DriverMapper;
+import com.example.vehicle.messaging.DriverProducer;
 import com.example.vehicle.repositories.BookingHistoryRepository;
 import com.example.vehicle.repositories.DriverRepository;
 import com.example.vehicle.repositories.VehicleRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.data.domain.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -38,31 +45,125 @@ class DriverServiceImplTest {
 
     @Mock BookingHistoryRepository bookingHistoryRepository;
 
+    @Mock  DriverProducer driverProducer;
+
+//    @Test
+//    void getAccount_shouldReturnAccounts() {
+//        // prepare data
+//        var driverEntity = buildDriverEntities();
+//        var driverResponses = buildDrivers();
+//        Pageable pageable = PageRequest.of(0, 10);
+//
+//        // giả lập Page<Driver>
+//        Page<Driver> driverPage = new PageImpl<>(driverEntity, pageable, driverEntity.size());
+//
+//        // Giả lập hành vi của mock
+//        when(driverRepository.findAll(pageable)).thenReturn(driverPage);
+//        when(driverMapper.toListResponse(driverEntity)).thenReturn(driverResponses);
+//
+//        // Gọi hàm và kiểm tra kết quả
+//        var result = driverServiceImpl.getAllDrivers(pageable);
+//
+//        assertNotNull(result);
+//        assertNotNull(result.getData());
+//        assertEquals(driverResponses.size(), result.getData().size());
+//        assertEquals(driverResponses.get(0).getDriverId(), result.getData().get(0).getDriverId());
+//
+//        // Đảm bảo method mock được gọi đúng
+//        verify(driverRepository, times(1)).findAll(pageable);
+//        verify(driverMapper, times(1)).toListResponse(driverEntity);
+//    }
+
     @Test
-    void getAccount_shouldReturnAccounts() {
-        // prepare data
-        var driverEntity = buildDriverEntities();
-        var driverResponses = buildDrivers();
-        Pageable pageable = PageRequest.of(0, 10);
+    void getAllDrivers_shouldReturnDriverResponses() {
+        // given: mock data
+        List<Driver> driverEntities = buildDriverEntities(); // giả lập list entity
+        List<DriverResponse> driverResponses = buildDrivers(); // giả lập list response
 
-        // giả lập Page<Driver>
-        Page<Driver> driverPage = new PageImpl<>(driverEntity, pageable, driverEntity.size());
+        int pageNo = 2;
+        int pageSize = 10;
+        String sortBy = "driverId";
+        String sortDir = "ASC";
 
-        // Giả lập hành vi của mock
+        Sort sort = Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+
+        Page<Driver> driverPage = new PageImpl<>(driverEntities, pageable, driverEntities.size());
+
+        // when: setup mock behavior
         when(driverRepository.findAll(pageable)).thenReturn(driverPage);
-        when(driverMapper.toListResponse(driverEntity)).thenReturn(driverResponses);
+        when(driverMapper.toListResponse(driverEntities)).thenReturn(driverResponses);
 
-        // Gọi hàm và kiểm tra kết quả
-        var result = driverServiceImpl.getAllDrivers(pageable);
+        // then: call the method
+        ApiResponse<List<DriverResponse>> result = driverServiceImpl.getAllDrivers(pageNo, pageSize, sortBy, sortDir);
 
+        // assertions
         assertNotNull(result);
-        assertEquals(driverResponses.size(), result.size());
-        assertEquals(driverResponses.get(0).getDriverId(), result.get(0).getDriverId());
+        assertNotNull(result.getData());
+        assertEquals(driverResponses.size(), result.getData().size());
+        assertEquals(driverResponses.get(0).getDriverId(), result.getData().get(0).getDriverId());
 
-        // Đảm bảo method mock được gọi đúng
+        // verify mocks
         verify(driverRepository, times(1)).findAll(pageable);
-        verify(driverMapper, times(1)).toListResponse(driverEntity);
+        verify(driverMapper, times(1)).toListResponse(driverEntities);
     }
+
+
+    @BeforeEach
+    void setupTranslator() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasename("i18n/messages"); // basename của messages.properties trong `src/main/resources`
+        messageSource.setDefaultEncoding("UTF-8");
+
+        Translator.messageSource = messageSource;
+    }
+
+    @Test
+    void acceptBooking_whenSavingBookingHistoryFails_shouldHandleException() {
+        Long driverId = 1L;
+        String action = "ACCEPT";
+        Driver mockDriver = buildDriver();
+
+        when(driverRepository.findById(driverId)).thenReturn(Optional.of(mockDriver));
+        when(bookingHistoryRepository.save(any(BookingHistory.class)))
+                .thenThrow(new AppException(ErrorCode.ERROR_SAVING_BOOKING_HISTORY));
+
+        ApiResponse<Boolean> result = driverServiceImpl.acceptBooking(driverId, action, null);
+
+        assertFalse(result.getData());
+        assertEquals(ErrorCode.ERROR_SAVING_BOOKING_HISTORY.getCode(), result.getCode());
+        verify(driverProducer, never()).producerDriverAction(any(), any(), any());
+    }
+
+    @Test
+    void acceptBooking_Reject_whenSavingBookingHistoryFails_shouldHandleException() {
+        Long driverId = 1L;
+        String action = "REJECT";
+        Driver mockDriver = buildDriver();
+
+        when(driverRepository.findById(driverId)).thenReturn(Optional.of(mockDriver));
+        when(bookingHistoryRepository.save(any(BookingHistory.class)))
+                .thenThrow(new AppException(ErrorCode.ERROR_SAVING_BOOKING_HISTORY));
+
+        ApiResponse<Boolean> result = driverServiceImpl.acceptBooking(driverId, action, null);
+
+        assertFalse(result.getData());
+        assertEquals(ErrorCode.ERROR_SAVING_BOOKING_HISTORY.getCode(), result.getCode());
+        verify(driverProducer, never()).producerDriverAction(any(), any(), any());
+    }
+
+    private Driver buildDriver() {
+        Driver driver = new Driver();
+        driver.setDriverId(1L);
+
+        Vehicle vehicle = new Vehicle();
+        vehicle.setVehicleId(100L);
+        driver.setVehicle(vehicle);
+
+        // Nếu bạn có thêm các field khác (email, name, license...), có thể thêm vào đây nếu cần
+        return driver;
+    }
+
 
     private List<DriverResponse> buildDrivers() {
         var driverResp1 = new DriverResponse();

@@ -1,21 +1,21 @@
 package com.example.vehicle.services;
 
 import com.example.vehicle.dtos.request.driver.DriverRequest;
+import com.example.vehicle.dtos.response.ApiResponse;
 import com.example.vehicle.dtos.response.driver.DriverResponse;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface DriverService {
-    DriverResponse createDriver(DriverRequest request);
+    ApiResponse<DriverResponse> createDriver(DriverRequest request);
 
-    List<DriverResponse> getAllDrivers(Pageable pageable);
+    ApiResponse<List<DriverResponse>> getAllDrivers(int pageNo, int pageSize, String sortBy, String sortDir);
 
-    DriverResponse getDriverById(Long id);
+    ApiResponse<DriverResponse> getDriverById(Long id);
 
-    DriverResponse updateDriver(Long id, DriverRequest request);
+    ApiResponse<DriverResponse> updateDriver(Long id, DriverRequest request);
 
-    boolean deleteDriver(List<Long> ids);
+    ApiResponse<Boolean> deleteDriver(List<Long> ids);
 
-    boolean  acceptBooking(Long id, String action);
+    ApiResponse<Boolean>  acceptBooking(Long id, String action, Long bookingId);
 }

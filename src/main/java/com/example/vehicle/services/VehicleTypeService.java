@@ -1,21 +1,21 @@
 package com.example.vehicle.services;
 
 import com.example.vehicle.dtos.request.vehicletype.VehicleTypeRequest;
+import com.example.vehicle.dtos.response.ApiResponse;
 import com.example.vehicle.dtos.response.vehicletype.VehicleTypeResponse;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface VehicleTypeService {
-    VehicleTypeResponse create(VehicleTypeRequest request);
+    ApiResponse<VehicleTypeResponse> create(VehicleTypeRequest request);
 
-    List<VehicleTypeResponse> getAllVehicleTypes(Pageable pageable);
+    ApiResponse<List<VehicleTypeResponse>> getAllVehicleTypes(int pageNo, int pageSize, String sortBy, String sortDir);
 
-    VehicleTypeResponse getVehicleTypeById(Long id);
+    ApiResponse<VehicleTypeResponse> getVehicleTypeById(Long id);
 
-    VehicleTypeResponse updateVehicleType(Long id, VehicleTypeRequest request);
+    ApiResponse<VehicleTypeResponse> updateVehicleType(Long id, VehicleTypeRequest request);
 
-    boolean deleteVehicleType(List<Long> ids);
+    ApiResponse<Boolean> deleteVehicleType(List<Long> ids);
 
 
 }

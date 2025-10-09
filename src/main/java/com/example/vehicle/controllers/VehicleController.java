@@ -1,18 +1,14 @@
 package com.example.vehicle.controllers;
 
-import com.example.vehicle.configs.Translator;
 import com.example.vehicle.dtos.request.vehicle.VehicleCreationRequest;
 import com.example.vehicle.dtos.request.vehicle.VehicleUpdateRequest;
 import com.example.vehicle.dtos.response.ApiResponse;
 import com.example.vehicle.dtos.response.vehicle.VehicleResponse;
-import com.example.vehicle.enums.SuccessCode;
 import com.example.vehicle.services.VehicleService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,11 +24,7 @@ public class VehicleController {
 
     @PostMapping("/vehicle/create")
     public ResponseEntity<ApiResponse<VehicleResponse>> createVehicle(@RequestBody @Valid VehicleCreationRequest request) {
-            ApiResponse<VehicleResponse> apiResponse = new ApiResponse<>();
-            apiResponse.setCode(SuccessCode.VEHICLE_CREATE.getCode());
-            apiResponse.setMessage(Translator.toLocale(SuccessCode.VEHICLE_CREATE.getCode()));
-            apiResponse.setResult(vehicleService.createVehicle(request));
-            return ResponseEntity.ok(apiResponse);
+            return ResponseEntity.ok(vehicleService.createVehicle(request));
     }
 
     @GetMapping("/vehicles")
@@ -42,41 +34,23 @@ public class VehicleController {
             @RequestParam(required = false, defaultValue = "vehicleId") String sortBy,
             @RequestParam(required = false, defaultValue = "ASC") String sortDir
     ) {
-        Sort sort = null;
-        if(sortDir.equalsIgnoreCase("ASC")){
-            sort = Sort.by(sortBy).ascending();
-        } else {
-            sort = Sort.by(sortBy).descending();
-        }
-        ApiResponse<List<VehicleResponse>> apiResponse = new ApiResponse<>();
-        apiResponse.setCode(SuccessCode.VEHICLE_GET_ALL.getCode());
-        apiResponse.setResult(vehicleService.getAllVehicles(PageRequest.of(pageNo-1, pageSize, sort)));
-        return ResponseEntity.ok(apiResponse);
+
+        return ResponseEntity.ok(vehicleService.getAllVehicles(pageNo , pageSize, sortBy,sortDir));
    }
 
     @GetMapping("/vehicle/{id}")
     public ResponseEntity<ApiResponse<VehicleResponse>> getVehicleById(@PathVariable Long id) {
-        ApiResponse<VehicleResponse> apiResponse = new ApiResponse<>();
-        apiResponse.setCode(SuccessCode.VEHICLE_GET_BY_ID.getCode());
-        apiResponse.setResult(vehicleService.getVehicleById(id));
-        return ResponseEntity.ok(apiResponse);
+        return ResponseEntity.ok(vehicleService.getVehicleById(id));
    }
 
    @PutMapping("/vehicle/update/{id}")
     public ResponseEntity<ApiResponse<VehicleResponse>> updateVehicle(@PathVariable Long id, @RequestBody VehicleUpdateRequest request) {
-        ApiResponse<VehicleResponse> apiResponse = new ApiResponse<>();
-       apiResponse.setCode(SuccessCode.VEHICLE_UPDATE.getCode());
-        apiResponse.setResult(vehicleService.updateVehicle(id, request));
-        return ResponseEntity.ok(apiResponse);
+        return ResponseEntity.ok(vehicleService.updateVehicle(id, request));
    }
 
    @DeleteMapping("/vehicle/delete")
     public ResponseEntity<ApiResponse<Boolean>> deleteVehicle(@RequestBody List<Long> ids) {
-        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
-       apiResponse.setCode(SuccessCode.VEHICLE_DELETE.getCode());
-       apiResponse.setMessage(Translator.toLocale(SuccessCode.VEHICLE_DELETE.getCode()));
-        apiResponse.setResult(vehicleService.deleteVehicle(ids));
-        return ResponseEntity.ok(apiResponse);
+        return ResponseEntity.ok(vehicleService.deleteVehicle(ids));
    }
 
 }

@@ -19,11 +19,14 @@ public class BookingHistory {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "booking_history_seq_gen")
     @SequenceGenerator(
             name = "booking_history_seq_gen",
-            sequenceName = "booking_history_booking_id_seq",
+            sequenceName = "booking_history_id_seq",
             allocationSize = 1
     )
+    Long id;
+
     @Column(name = "booking_id")
     Long bookingId;
+
 
     @ManyToOne
     @JoinColumn(name = "vehicle_id")
