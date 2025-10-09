@@ -1,12 +1,15 @@
 package com.example.vehicle.services.impls;
 
+import com.example.vehicle.configs.Translator;
 import com.example.vehicle.dtos.request.vehicle.VehicleCreationRequest;
 import com.example.vehicle.dtos.request.vehicle.VehicleUpdateRequest;
+import com.example.vehicle.dtos.response.ApiResponse;
 import com.example.vehicle.dtos.response.vehicle.VehicleResponse;
 import com.example.vehicle.entities.Driver;
 import com.example.vehicle.entities.DriverVehicleHistory;
 import com.example.vehicle.entities.Vehicle;
 import com.example.vehicle.entities.VehicleType;
+import com.example.vehicle.enums.SuccessCode;
 import com.example.vehicle.enums.VehicleStatus;
 import com.example.vehicle.exceptions.AppException;
 import com.example.vehicle.enums.ErrorCode;
@@ -18,13 +21,14 @@ import com.example.vehicle.repositories.VehicleTypeRepository;
 import com.example.vehicle.services.VehicleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +49,7 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public VehicleResponse createVehicle(VehicleCreationRequest request) {
+    public ApiResponse<VehicleResponse> createVehicle(VehicleCreationRequest request) {
         log.info("Start creating vehicle...");
 
         if(vehicleRepository.existsByLicensePlate(request.getLicensePlate())) {
@@ -93,27 +97,50 @@ public class VehicleServiceImpl implements VehicleService {
         driverVehicleHistoryRepository.save(driverVehicleHistory);
         log.info("Vehicle and driver history created successfully");
 
-        return vehicleMapper.toResponse(response);
+        ApiResponse<VehicleResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(SuccessCode.VEHICLE_CREATE.getCode());
+        apiResponse.setMessage(Translator.toLocale(SuccessCode.VEHICLE_CREATE.getCode()));
+        apiResponse.setData(vehicleMapper.toResponse(response));
+
+        return apiResponse;
     }
 
 
     @Override
-    public List<VehicleResponse> getAllVehicles(Pageable pageable) {
+    public ApiResponse<List<VehicleResponse>> getAllVehicles(int pageNo, int pageSize, String sortBy, String sortDir) {
         log.info("Start get all vehicle ...");
+
+        log.info("Paging");
+        Sort sort = sortDir.equalsIgnoreCase("ASC")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+
         List<Vehicle> vehicles = vehicleRepository.findAll(pageable).getContent();
 
         List<VehicleResponse> responses = vehicleMapper.toListResponse(vehicles);
+
+        ApiResponse<List<VehicleResponse>> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(SuccessCode.VEHICLE_GET_ALL.getCode());
+        apiResponse.setData(responses);
+
         log.info("Vehicles get all successfully");
-        return responses;
+        return apiResponse;
     }
 
     @Override
-    public VehicleResponse getVehicleById(Long id) {
-        return vehicleMapper.toResponse(vehicleRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.VEHICLE_EXCEPTION )));
+    public ApiResponse<VehicleResponse> getVehicleById(Long id) {
+        Vehicle vehicle = vehicleRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.VEHICLE_EXCEPTION));
+
+        ApiResponse<VehicleResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(SuccessCode.VEHICLE_GET_BY_ID.getCode());
+        apiResponse.setData(vehicleMapper.toResponse(vehicle));
+        return apiResponse;
     }
 
     @Override
-    public VehicleResponse updateVehicle(Long id, VehicleUpdateRequest vehicleUpdateRequest) {
+    public ApiResponse<VehicleResponse> updateVehicle(Long id, VehicleUpdateRequest vehicleUpdateRequest) {
         log.info("Start update vehicle ...");
 
         Vehicle vehicle = vehicleRepository.findById(id)
@@ -171,13 +198,19 @@ public class VehicleServiceImpl implements VehicleService {
         log.info("Lưu lại vehicle đã cập nhật");
         Vehicle response = vehicleRepository.save(vehicle);
 
-        return vehicleMapper.toResponse(response);
+        ApiResponse<VehicleResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(SuccessCode.VEHICLE_UPDATE.getCode());
+        apiResponse.setData(vehicleMapper.toResponse(response));
+        return apiResponse;
+
     }
 
     @Override
-    public boolean deleteVehicle(List<Long> ids) {
+    public ApiResponse<Boolean> deleteVehicle(List<Long> ids) {
+        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
         if (ids == null || ids.isEmpty()) {
-            return false;
+            apiResponse.setData(false);
+            return apiResponse;
         }
 
         log.info("Lấy danh sách thực tế các vehicle tồn tại");
@@ -189,7 +222,10 @@ public class VehicleServiceImpl implements VehicleService {
         }
 
         vehicleRepository.deleteAll(vehicles);
-        return true;
+        apiResponse.setCode(SuccessCode.VEHICLE_DELETE.getCode());
+        apiResponse.setMessage(Translator.toLocale(SuccessCode.VEHICLE_DELETE.getCode()));
+        apiResponse.setData(true);
+        return apiResponse;
     }
 
 }

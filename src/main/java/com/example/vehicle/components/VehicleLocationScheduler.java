@@ -31,7 +31,7 @@ public class VehicleLocationScheduler {
     private final Random random = new Random();
 
     private void updateRedisWithVehicleList(List<Vehicle> vehicles) {
-        // Sắp xếp lại danh sách vehicles theo vehicleId tăng dần
+        log.info("Sắp xếp lại danh sách vehicles theo vehicleId tăng dần");
         vehicles.sort(Comparator.comparing(Vehicle::getVehicleId));
         List<VehicleLocationResponse> responseList = vehicles.stream()
                 .map(v -> VehicleLocationResponse.builder()
@@ -41,7 +41,6 @@ public class VehicleLocationScheduler {
                         .latitude(v.getLatitude())
                         .longitude(v.getLongitude())
                         .updatedAt(LocalDateTime.now())
-                        // Lấy tài xế đầu tiên, nếu không có thì trả về null
                         .driver(v.getDriver() != null ? new DriverDTO(v.getDriver()) : null)
                         .vehicleType(v.getVehicleType().getVehicleTypeId())
                         .build())
@@ -57,16 +56,16 @@ public class VehicleLocationScheduler {
     public void updateVehicleLocationsInRedis() {
         log.info("Bắt đầu cập nhật vehicle vào Redis lúc: {}", OffsetDateTime.now());
 
-        // Lấy tất cả vehicle từ Redis
+        log.info("Lấy tất cả vehicle từ Redis");
         List<Vehicle> vehicles = vehicleRepository.findActiveVehicles();
 
-        // ✅ Sửa lại lọc driver là ACTIVE theo quan hệ 1-1
+        log.info("✅ Sửa lại lọc driver là ACTIVE theo quan hệ 1-1");
         List<Vehicle> filteredVehicles = vehicles.stream()
                 .filter(vehicle -> vehicle.getDriver() != null
                         && "ACTIVE".equalsIgnoreCase(vehicle.getDriver().getStatus().name()))
                 .collect(Collectors.toList());
 
-//        lay trong cache ra ròi
+        log.info(" lay trong cache ra ròi");
         for (Vehicle v : filteredVehicles) {
             double latShift = (random.nextDouble() - 0.5) / 1000; // ±0.0005
             double lngShift = (random.nextDouble() - 0.5) / 1000;
@@ -78,7 +77,7 @@ public class VehicleLocationScheduler {
             v.setLongitude(newLng);
         }
 
-        // cập nhật Redis
+        log.info("cập nhật Redis");
         updateRedisWithVehicleList(filteredVehicles); // serialize JSON và set vào Redis
 
         log.info("Đã cập nhật {} vehicle vào Redis lúc {}", filteredVehicles.size(), OffsetDateTime.now());
@@ -91,7 +90,7 @@ public class VehicleLocationScheduler {
     public void updateVehicleLocationsInDb() {
         log.info("Bắt đầu cập nhật vị trí vehicle vào DB lúc: {}", OffsetDateTime.now());
 
-        // Lấy tất cả vehicle từ Redis
+        log.info("Get all vehicle from Redis");
         List<VehicleLocationResponse> vehiclesFromRedis = redisService.getValue("vehicles::all", new TypeReference<>() {});
 
         if (vehiclesFromRedis != null) {
@@ -100,7 +99,7 @@ public class VehicleLocationScheduler {
                     .filter(Objects::nonNull)
                     .filter(vehicle -> vehicle.getDriver() != null
                             && "ACTIVE".equalsIgnoreCase(vehicle.getDriver().getStatus().name()))
-                    .map(vehicle -> {
+                    .peek(vehicle -> {
                         VehicleLocationResponse dto = vehiclesFromRedis.stream()
                                 .filter(d -> d.getVehicleId().equals(vehicle.getVehicleId()))
                                 .findFirst()
@@ -109,15 +108,14 @@ public class VehicleLocationScheduler {
                             vehicle.setLatitude(dto.getLatitude());
                             vehicle.setLongitude(dto.getLongitude());
                         }
-                        return vehicle;
                     })
                     .collect(Collectors.toList());
 
-            // Cập nhật DB
+            log.info("Cập nhật DB");
             vehicleRepository.saveAll(vehiclesToUpdate);
             log.info("Đã cập nhật {} vehicle vào DB lúc {}", vehiclesToUpdate.size(), OffsetDateTime.now());
 
-            // Sau khi cập nhật DB, cập nhật lại Redis với dữ liệu mới nhất
+            log.info("Sau khi cập nhật DB, cập nhật lại Redis với dữ liệu mới nhất");
             updateRedisWithVehicleList(vehiclesToUpdate);  // Cập nhật Redis với danh sách vehicles mới
         }
     }

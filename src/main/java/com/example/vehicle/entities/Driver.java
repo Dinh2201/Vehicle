@@ -6,8 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Entity(name = "driver")
 @Getter
@@ -52,8 +51,5 @@ public class Driver {
 
     @OneToOne(mappedBy = "driver")
      Vehicle vehicle;
-
-    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DriverNotification> notifications = new ArrayList<>();
 
 }
