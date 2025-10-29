@@ -57,7 +57,7 @@ public class DriverController {
     // Endpoint để chấp nhận tài xế
     @PutMapping("/driver/{driverId}")
     public ResponseEntity<ApiResponse<Boolean>> isAcceptBooking(@PathVariable Long driverId, @RequestParam("action") String action) {
-        return ResponseEntity.ok(driverService.acceptBooking(driverId, action,null));
+        return ResponseEntity.ok(driverService.handelBookingAction(driverId, action,null, true));
     }
 
 

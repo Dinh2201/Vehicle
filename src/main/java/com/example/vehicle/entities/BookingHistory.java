@@ -22,7 +22,7 @@ public class BookingHistory {
             sequenceName = "booking_history_id_seq",
             allocationSize = 1
     )
-    Long id;
+    Long id; //unique, composite unit
 
     @Column(name = "booking_id")
     Long bookingId;

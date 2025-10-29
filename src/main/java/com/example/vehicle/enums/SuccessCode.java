@@ -26,7 +26,8 @@ public enum SuccessCode {
     VEHICLE_TYPE_UPDATE("S018"),
     VEHICLE_TYPE_DELETE("S019"),
     DRIVER_VEHICLE_HISTORY("S020"),
-    BOOKING_HISTORY("S021");
+    BOOKING_HISTORY("S021"),
+    DRIVER_CANCEL("S022");
 
 
     private final String code;

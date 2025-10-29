@@ -17,5 +17,5 @@ public interface DriverService {
 
     ApiResponse<Boolean> deleteDriver(List<Long> ids);
 
-    ApiResponse<Boolean>  acceptBooking(Long id, String action, Long bookingId);
+    ApiResponse<Boolean>  handelBookingAction(Long id, String action, Long bookingId, boolean isFromDriver);
 }

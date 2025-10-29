@@ -22,7 +22,7 @@ public class DriverProducerImpl implements DriverProducer {
     private final KafkaService<String, Object> kafkaService;
 
     @Override
-    public void producerDriverAction(Long driverId, String action, @Nullable Long bookingId) {
+    public void producerDriverAction(Long driverId, String action, @Nullable Long bookingId, boolean isFromDriver) {
         var topic = kafkaTopicProperties.getBookingNoty();
 
         String formattedTime = LocalDateTime.now()
@@ -38,9 +38,10 @@ public class DriverProducerImpl implements DriverProducer {
             message.put("driverId", driverId);
             message.put("action", action);
 
-            // ✅ Nếu là CANCEL thì mặc định là từ phía USER
+            log.info("Nếu là CANCEL thì mặc định là từ phía USER");
             if ("CANCEL".equalsIgnoreCase(action)) {
-                message.put("cancelledBy", "CANCELLED BY USER");
+                String cancelledBy = isFromDriver ? "CANCELLED BY DRIVER" : "CANCELLED BY USER";
+                message.put("cancelledBy", cancelledBy);
             }
 
             message.put("timestamp", formattedTime);

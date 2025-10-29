@@ -137,7 +137,7 @@ public class DriverServiceImpl implements DriverService {
 
 
     @Override
-    public ApiResponse<Boolean> acceptBooking(Long id, String action,  @Nullable Long bookingId) {
+    public ApiResponse<Boolean> handelBookingAction(Long id, String action,  @Nullable Long bookingId, boolean isFromDriver) {
         ApiResponse<Boolean> apiResponse = new ApiResponse<>();
 
         BookingAction bookingAction ;
@@ -175,10 +175,13 @@ public class DriverServiceImpl implements DriverService {
                     break;
 
                 case CANCEL:
-                    bookingHistory.setBookingStatus("CANCELLED BY USER");
                     bookingHistory.setBookingId(bookingId);
-                    apiResponse.setCode(SuccessCode.USER_CANCEL.getCode());
-                    apiResponse.setMessage(Translator.toLocale(SuccessCode.USER_CANCEL.getCode()));
+                    bookingHistory.setBookingStatus(isFromDriver ? "CANCELLED BY DRIVER" : "CANCELLED BY USER");
+
+                    String code = isFromDriver ? SuccessCode.DRIVER_CANCEL.getCode() : SuccessCode.USER_CANCEL.getCode();
+
+                    apiResponse.setCode(code);
+                    apiResponse.setMessage(Translator.toLocale(code));
                     apiResponse.setData(false);
                     break;
 
@@ -186,7 +189,8 @@ public class DriverServiceImpl implements DriverService {
                     apiResponse.setData(false);
             }
             bookingHistoryRepository.save(bookingHistory);
-            driverProducer.producerDriverAction(id, action, bookingId);
+            driverProducer.producerDriverAction(id, action, bookingId, isFromDriver);
+
         }catch (AppException e){
             apiResponse.setCode(ErrorCode.ERROR_SAVING_BOOKING_HISTORY.getCode());
             apiResponse.setMessage(Translator.toLocale(ErrorCode.ERROR_SAVING_BOOKING_HISTORY.getCode()));

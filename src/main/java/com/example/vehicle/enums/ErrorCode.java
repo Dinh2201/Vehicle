@@ -17,6 +17,7 @@ public enum ErrorCode {
     VEHICLES_NOT_FOUND("E008"),
     VEHICLE_TYPES_NOT_FOUND("E009"),
     ERROR_SAVING_BOOKING_HISTORY("E010"),
+    ERROR_PRODUCER("E011"),
     VALIDATION("4000");
 
     private final String code;

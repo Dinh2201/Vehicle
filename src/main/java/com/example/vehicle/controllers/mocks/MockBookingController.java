@@ -24,7 +24,7 @@ public class MockBookingController {
     public ResponseEntity<Map<String, Object>> cancel(@PathVariable Long bookingId) {
         Long mockDriverId = 14L; // sau này sẽ lấy từ booking thực
         // Gọi tới service, truyền isFromDriver = false
-        driverService.acceptBooking(mockDriverId, "cancel", bookingId);
+        driverService.handelBookingAction(mockDriverId, "cancel", bookingId, false);
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("bookingId", bookingId);
         response.put("status", "CANCELED");
